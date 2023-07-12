@@ -1,0 +1,26 @@
+##G4.PRIM-FORMAT-2.4
+###################################################
+#  Cone segment
+#
+# /Cons rmin1  rmax1  rmin2  rmax2  dz   sphi   dphi  
+#
+## Note: -2PI <= sphi <= 2PI,  0 <= dphi <= 2PI
+##       Automatic angle trancation is supported.
+##       For example, dphi = 1000 is trancated to
+##       dphi = 2PI
+###################################################
+
+/BoundingBox -2.0 -2.0 -2.0   2.0  2.0  2.0
+!SetCamera
+!OpenDevice 
+!BeginModeling
+
+/ColorRGB  1 0 1
+
+#     rmin1  rmax1  rmin2  rmax2  dz   sphi   dphi  
+/Cons 2.0    2.5    1.0    1.5    2.0  -0.79  6.0
+
+!EndModeling
+!DrawAll 
+!CloseDevice 
+

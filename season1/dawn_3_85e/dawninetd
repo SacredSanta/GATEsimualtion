@@ -1,0 +1,2 @@
+#! /bin/sh
+xterm -title "Fukui  Renderer  Console" -fg yellow -bg 'black' -sb -e dawn -G &

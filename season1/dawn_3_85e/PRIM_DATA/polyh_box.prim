@@ -1,0 +1,33 @@
+##G4.PRIM-FORMAT-2.4
+##################################################
+# 1x4x9 box with /Polyhedron ... /EndPolyhedron ##
+##################################################
+
+/BoundingBox -0.5 -2.0 -4.5  0.5  2.0  4.5
+!SetCamera
+!OpenDevice 
+!BeginModeling
+
+/ColorRGB  0.0 1.0 0.0
+
+/Polyhedron
+/Vertex -0.500000000 -2.000000000 -4.500000000
+/Vertex 0.500000000 -2.000000000 -4.500000000
+/Vertex -0.500000000 2.000000000 -4.500000000
+/Vertex 0.500000000 2.000000000 -4.500000000
+/Vertex -0.500000000 -2.000000000 4.500000000
+/Vertex 0.500000000 -2.000000000 4.500000000
+/Vertex -0.500000000 2.000000000 4.500000000
+/Vertex 0.500000000 2.000000000 4.500000000
+/Facet  3 4 2 1
+/Facet  1 2 6 5
+/Facet  2 4 8 6
+/Facet  4 3 7 8
+/Facet  3 1 5 7
+/Facet  5 6 8 7
+/EndPolyhedron
+
+
+!EndModeling
+!DrawAll 
+!CloseDevice 

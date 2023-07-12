@@ -1,0 +1,24 @@
+##G4.PRIM-FORMAT-2.4
+#######################
+# Test of cut view 2  #
+#######################
+
+/BoundingBox -4.0 -4.0 -2.0   4.0  4.0  2.0
+!SetCamera
+!OpenDevice 
+!BeginModeling
+
+
+/Origin 0.0 0.0 0.0
+/ColorRGB 1.0  0.0  0.0 
+/Tubs 0.5 4.0 2.0 0.0 6.2831853
+
+
+/Origin 2.0 0.0 0.0
+/ColorRGB 0.0  0.0  1.0 
+/Column 1.0  2.0 
+
+!EndModeling
+!DrawAll 
+!CloseDevice 
+

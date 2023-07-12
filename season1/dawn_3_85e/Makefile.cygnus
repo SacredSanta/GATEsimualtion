@@ -1,0 +1,271 @@
+### MAKEFILE (For Cygnus at NT/98: UNIX without X-Win without OpenGL) ###
+
+### C++ compiler
+CC = g++
+
+### Optimization
+OPTIMIZE = -O3
+
+### Waring level
+WARNING = 
+#WARNING = -Wall
+
+### Window shell
+WISH = wish
+
+### Directory where to install executable files
+INSTALL_DIR = /usr/local/bin
+
+
+
+### GUI file (Do not change this name)
+GUI_MENU          = DAWN_GUI
+
+### Library
+LIBS	 = 
+LIB_DIR  = 
+
+### Include-file directories
+INCLUDE_DIR   = 
+
+### Executalble files 
+EXEC	       = dawn
+#EXEC	       = windawn
+BREP_DATA_DIR  = BREP_DATA
+PRIM_DATA_DIR  = PRIM_DATA
+
+### Object files
+OBJ	= main.o main_selector1.o main_selector2.o parameter.o \
+          command1.o command2.o command3.o command4.o command_tk.o command_ps.o command_ps2.o \
+          vector.o perspective.o tool2d.o tool3d.o toolio.o toolstring.o \
+          hid1.o hid2.o hidA.o hidB.o hidC.o shading.o object1.o object2.o object3.o \
+          filereader.o filereader2.o filereader3.o filereader_old.o \
+          postscript.o postscript2.o linesegment.o hidline.o \
+	  FRCommandAnalyzer.o \
+          FRArray.o \
+	  FRBrepGenerator.o  FRBrepGenerator2.o FRObjectGenerator.o FRTrigonometric.o \
+          FRPolylineForBrep.o FRBoxForBrep.o FRTrdForBrep.o FRTrapForBrep.o FRParallelepipedForBrep.o \
+          FRTubeSegForBrep.o FRConeSegForBrep.o FRSphereForBrep.o FRSphereSegForBrep.o \
+          FRPolygonForBrep.o FRPolyconeForBrep.o \
+          FRTorusForBrep.o \
+          FRMark.o \
+          polyhedron.o
+
+### Commpilation
+$(EXEC):	$(OBJ) $(GUI_MENU)
+		$(CC)  $(WARNING) $(OPTIMIZE) $(LIB_DIR)  -o $(EXEC)  $(OBJ) $(SOCKET_LIBS) $(LIBS)
+
+
+main.o:	main.cc main_selector.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) main.cc
+
+main_selector1.o: main_selector1.cc main_selector.h 
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) main_selector1.cc
+
+main_selector2.o: main_selector2.cc main_selector.h FRServer.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) main_selector2.cc
+
+main_selector3.o: main_selector3.cc main_selector.h FRServer.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) main_selector3.cc
+
+parameter.o:	parameter.cc parameter.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) parameter.cc
+
+command1.o:	command1.cc command.h version.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) command1.cc	
+
+command2.o:	command2.cc command.h 
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) command2.cc	
+
+command3.o:	command3.cc command.h 
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) command3.cc	
+
+command4.o:	command4.cc command.h command4c.icc
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) command4.cc	
+
+command_tk.o:	command_tk.cc command.h 
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) command_tk.cc	
+
+command_ps.o:	command_ps.cc command.h 
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) command_ps.cc	
+
+command_ps2.o:	command_ps2.cc command.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) command_ps2.cc	
+
+vector.o:	vector.cc vector.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) vector.cc
+
+perspective.o:	perspective.cc perspective.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) perspective.cc
+
+tool2d.o:	tool2d.cc tool2d.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) tool2d.cc
+
+tool3d.o:	tool3d.cc tool3d.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) tool3d.cc
+
+toolio.o:	toolio.cc toolio.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) toolio.cc
+
+toolstring.o:	toolstring.cc toolstring.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) toolstring.cc
+
+hid1.o:	hid1.cc hid.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) hid1.cc
+
+hid2.o:	hid2.cc hid.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) hid2.cc
+
+hidA.o:	hidA.cc hid.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) hidA.cc
+
+hidB.o:	hidB.cc hid.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) hidB.cc
+
+hidC.o:	hidC.cc hid.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) hidC.cc
+
+shading.o:	shading.cc shading.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) shading.cc
+
+object1.o:	object1.cc object.h 
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) object1.cc
+
+object2.o:	object2.cc object.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) object2.cc
+
+object3.o:	object3.cc object.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) object3.cc
+
+postscript.o:	postscript.cc postscript.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) postscript.cc
+
+postscript2.o:	postscript2.cc postscript.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) postscript2.cc
+
+filereader.o:	filereader.cc filereader.h object.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) filereader.cc
+
+filereader2.o:	filereader2.cc filereader.h object.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) filereader2.cc
+
+filereader3.o:	filereader3.cc filereader.h object.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) filereader3.cc
+
+filereader_old.o:	filereader_old.cc filereader.h object.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) filereader_old.cc
+
+linesegment.o:	linesegment.cc linesegment.h perspective.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) linesegment.cc
+
+hidline.o:	hidline.cc hidline.h hid.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) hidline.cc
+
+FRArray.o: FRArray.cc FRArray.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRArray.cc
+
+FRCommandAnalyzer.o:	FRCommandAnalyzer.cc FRCommandAnalyzer.h  FRCommandList.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRCommandAnalyzer.cc	
+
+FRBrepGenerator.o: FRBrepGenerator.cc FRBrepGenerator.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRBrepGenerator.cc
+
+FRBrepGenerator2.o: FRBrepGenerator2.cc FRBrepGenerator.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRBrepGenerator2.cc
+
+FRObjectGenerator.o: FRObjectGenerator.cc FRObjectGenerator.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRObjectGenerator.cc
+
+FRTrigonometric.o: FRTrigonometric.cc FRTrigonometric.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRTrigonometric.cc
+
+FRPolylineForBrep.o: FRPolylineForBrep.cc FRPolylineForBrep.h FRPolyline.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRPolylineForBrep.cc
+
+FRBoxForBrep.o: FRBoxForBrep.cc FRBoxForBrep.h FRBox.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRBoxForBrep.cc
+
+FRTrdForBrep.o: FRTrdForBrep.cc FRTrdForBrep.h FRTrd.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRTrdForBrep.cc
+
+FRTrapForBrep.o: FRTrapForBrep.cc FRTrapForBrep.h FRTrap.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRTrapForBrep.cc
+
+FRParallelepipedForBrep.o: FRParallelepipedForBrep.cc FRParallelepipedForBrep.h FRParallelepiped.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRParallelepipedForBrep.cc
+
+FRTubeSegForBrep.o: FRTubeSegForBrep.cc FRTubeSegForBrep.h FRTubeSeg.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRTubeSegForBrep.cc
+
+
+FRConeSegForBrep.o: FRConeSegForBrep.cc FRConeSegForBrep.h FRConeSeg.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRConeSegForBrep.cc
+
+FRSphereForBrep.o: FRSphereForBrep.cc FRSphereForBrep.h FRSphere.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRSphereForBrep.cc
+
+FRSphereSegForBrep.o: FRSphereSegForBrep.cc FRSphereSegForBrep.h FRSphereSeg.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRSphereSegForBrep.cc
+
+FRPolygonForBrep.o: FRPolygonForBrep.cc FRPolygonForBrep.h FRPolygon.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRPolygonForBrep.cc
+
+FRPolyconeForBrep.o: FRPolyconeForBrep.cc FRPolyconeForBrep.h FRPolycone.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRPolyconeForBrep.cc
+
+FRTorusForBrep.o: FRTorusForBrep.cc FRTorusForBrep.h FRTorus.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRTorusForBrep.cc
+
+FRMark.o: FRMark.cc FRMark.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRMark.cc
+
+polyhedron.o: polyhedron.cc polyhedron.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) polyhedron.cc
+
+$(GUI_MENU):
+	rm -f $(GUI_MENU) ./$(BREP_DATA_DIR)/$(GUI_MENU) ./$(PRIM_DATA_DIR)/$(GUI_MENU)
+	rm -f .DAWN.history .DAWN.default 
+	rm -f ./$(BREP_DATA_DIR)/.DAWN.history  ./$(BREP_DATA_DIR)/.DAWN.default 
+	rm -f ./$(PRIM_DATA_DIR)/.DAWN.history ./$(PRIM_DATA_DIR)/.DAWN.default 
+	cat $(GUI_MENU)_menu.header            >  $(GUI_MENU)
+	cat $(GUI_MENU)_menu.header2           >> $(GUI_MENU)
+	cat $(GUI_MENU)_menu_devindep.body     >> $(GUI_MENU)
+	chmod +x $(GUI_MENU)
+	chmod +x $(GUI_MENU).bat
+
+
+#### clean
+objclean:
+	rm -f *.o
+
+execlean:
+	rm -f $(EXEC).exe $(EXEC) ./$(PRIM_DATA_DIR)/$(EXEC) a.out
+
+guiclean:
+	rm -f $(GUI_MENU) ./$(BREP_DATA_DIR)/$(GUI_MENU) ./$(PRIM_DATA_DIR)/$(GUI_MENU)
+	rm -f .DAWN.history .DAWN.default
+	rm -f ./$(BREP_DATA_DIR)/.DAWN.history  ./$(BREP_DATA_DIR)/.DAWN.default 
+	rm -f ./$(PRIM_DATA_DIR)/.DAWN.history ./$(PRIM_DATA_DIR)/.DAWN.default 
+	rm -f .DAWN_1.history .DAWN_1.default
+	rm -f ./$(BREP_DATA_DIR)/.DAWN_1.history  ./$(BREP_DATA_DIR)/.DAWN_1.default 
+	rm -f ./$(PRIM_DATA_DIR)/.DAWN_1.history ./$(PRIM_DATA_DIR)/.DAWN_1.default 
+
+clean:
+	rm -f $(EXEC).exe $(EXEC) ./$(PRIM_DATA_DIR)/$(EXEC) a.out
+	rm -f $(G4TEST_INET) $(G4TEST_UNIX) 
+	rm -f g4.* ./$(PRIM_DATA_DIR)/g4.*
+	rm -f polygon.out camera.out
+	rm -f ./$(BREP_DATA_DIR)/polygon.out  ./$(BREP_DATA_DIR)/camera.out
+	rm -f ./$(PRIM_DATA_DIR)/polygon.out ./$(PRIM_DATA_DIR)/camera.out
+	rm -f ./$(PRIM_DATA_DIR)/core ./$(BREP_DATA_DIR)/core
+	rm -f \#* ./$(PRIM_DATA_DIR)/\#* ./$(BREP_DATA_DIR)/\#*
+	rm -f *.o
+	rm -f a.out core 
+	rm -f $(GUI_MENU) ./$(BREP_DATA_DIR)/$(GUI_MENU) ./$(PRIM_DATA_DIR)/$(GUI_MENU)
+	rm -f FR_TMP3 ./$(BREP_DATA_DIR)/FR_TMP3  ./$(PRIM_DATA_DIR)/FR_TMP3
+	rm -f *.eps ./$(BREP_DATA_DIR)/*.eps  ./$(PRIM_DATA_DIR)/*.eps
+
+### install 
+install:
+	@echo "Open DOS Window and execute  dawn_install.bat"
+

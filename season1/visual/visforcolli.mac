@@ -1,0 +1,11 @@
+/vis/open OGLSX
+/vis/viewer/set/viewpointThetaPhi 0 60
+/vis/viewer/zoom 350
+/vis/viewer/panTo 0 0
+/vis/drawVolume
+/vis/viewer/flush
+/tracking/verbose 0
+/tracking/storeTrajectory 1
+/vis/scene/add/trajectories
+/vis/ogl/set/displayListLimit 13000
+

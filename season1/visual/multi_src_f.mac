@@ -1,0 +1,283 @@
+# iCZT coded aperture
+
+#/vis/disable
+
+/control/execute vis.mac
+
+
+
+# V I S U A L I S A T I O N
+
+
+
+/gate/geometry/setMaterialDatabase ../GateMaterials.db
+
+#WORLD
+
+/gate/world/geometry/setXLength 1200 cm
+
+/gate/world/geometry/setYLength 1200 cm
+
+/gate/world/geometry/setZLength 1200 cm
+
+#GEOMETRY
+
+/gate/world/daughters/name scanner
+
+/gate/world/daughters/insert box
+
+/gate/scanner/placement/setTranslation 0. 0. 3000. mm
+
+/gate/scanner/geometry/setXLength 240. mm
+
+/gate/scanner/geometry/setYLength 240. mm
+
+/gate/scanner/geometry/setZLength 240. mm
+
+/gate/scanner/setMaterial Air
+
+/gate/scanner/vis/forceWireframe
+
+#collimator
+
+/gate/scanner/daughters/name collimator
+
+/gate/scanner/daughters/insert box
+
+/gate/collimator/geometry/setXLength 37 mm
+
+/gate/collimator/geometry/setYLength 37 mm
+
+/gate/collimator/geometry/setZLength 10 mm
+
+/gate/collimator/placement/setTranslation 0. 0. 5. mm 
+# collimator surface:-500cm
+
+/gate/collimator/setMaterial Tungsten
+
+
+
+#HOLE REPEATER
+
+/gate/collimator/daughters/name holes
+
+/gate/collimator/daughters/insert box
+
+/gate/holes/geometry/setXLength 1 mm
+/gate/holes/geometry/setYLength 1 mm
+/gate/holes/geometry/setZLength 10 mm
+
+/gate/holes/setMaterial Air
+
+/gate/holes/repeaters/insert genericRepeater
+
+/gate/holes/genericRepeater/useRelativeTranslation 0
+
+/gate/holes/genericRepeater/setPlacementsFilename ../Rank19_v2_ch.placements
+
+
+
+#detector
+
+/gate/scanner/daughters/name detector
+
+/gate/scanner/daughters/insert box
+
+/gate/detector/geometry/setXLength 20 mm
+
+/gate/detector/geometry/setYLength 20 mm
+
+/gate/detector/geometry/setZLength 7 mm 
+
+/gate/detector/placement/setTranslation 0. 0. 28.5 mm 
+
+/gate/detector/setMaterial GAGG
+
+/gate/detector/vis/setColor white
+
+/gate/detector/vis/forceWireframe
+
+
+
+# tan(22.5) * 5000(Collimator to Source Distance) * 2 / 23 = 180.0928~ => 180
+
+
+
+#SYSTEM
+
+/gate/systems/scanner/level1/attach collimator
+
+/gate/systems/scanner/level2/attach detector
+
+/gate/detector/attachCrystalSD
+
+
+
+#PHYSICS
+
+#/gate/physics/addProcess PhotoElectric gamma
+
+#/gate/physics/processes/PhotoElectric/setModel StandardModel
+
+#/gate/physics/addProcess Compton gamma
+ 
+#/gate/physics/processes/Compton/setModel PenelopeModel
+
+#/gate/physics/addProcess RayleighScattering gamma
+
+#/gate/physics/processes/RayleighScattering/setModel PenelopeModel
+
+#/gate/physics/addProcess ElectronIonisation e-
+
+#/gate/physics/processes/ElectronIonisation/setModel StandardModel e-
+
+#/gate/physics/addProcess Bremsstrahlung e-
+
+#/gate/physics/processes/Bremsstrahlung/setModel StandardModel e-
+
+#/gate/physics/addProcess eMultipleScattering e-
+
+
+#/gate/physics/processList Enabled
+
+
+#/gate/physics/processList Initialized
+
+
+
+
+
+
+#DIGITIZER
+
+/gate/digitizer/Singles/insert adder
+
+/gate/digitizer/Singles/insert thresholder
+
+/gate/digitizer/Singles/thresholder/setThreshold 596. keV
+
+/gate/digitizer/Singles/insert upholder
+
+/gate/digitizer/Singles/upholder/setUphold 728. keV
+
+
+
+
+
+#INITIALIZE
+
+/gate/run/initialize
+
+
+
+# Activity(Origin) 5920000000
+
+
+#SOURCE1
+/gate/source/addSource Gamma1
+/gate/source/Gamma1/setActivity 0.000000000000001 Ci
+/gate/source/Gamma1/gps/type Point
+/gate/source/Gamma1/gps/particle gamma
+/gate/source/Gamma1/gps/energytype Mono
+/gate/source/Gamma1/gps/monoenergy 662 keV
+/gate/source/Gamma1/gps/centre 250. 0. 1000. mm
+/gate/source/Gamma1/gps/angtype iso
+/gate/source/Gamma1/gps/mintheta 150. deg
+/gate/source/Gamma1/gps/maxtheta 180. deg
+/gate/source/Gamma1/gps/minphi 0. deg
+/gate/source/Gamma1/gps/maxphi 360. deg
+/gate/source/Gamma1/dump 1
+
+#SOURCE2
+/gate/source/addSource Gamma2
+/gate/source/Gamma2/setActivity 0.000000000000001 Ci
+/gate/source/Gamma2/gps/type Point
+/gate/source/Gamma2/gps/particle gamma
+/gate/source/Gamma2/gps/energytype Mono
+/gate/source/Gamma2/gps/monoenergy 662 keV
+/gate/source/Gamma2/gps/centre 0. 0. 1000. mm
+/gate/source/Gamma2/gps/angtype iso
+/gate/source/Gamma2/gps/mintheta 150. deg
+/gate/source/Gamma2/gps/maxtheta 180. deg
+/gate/source/Gamma2/gps/minphi 0. deg
+/gate/source/Gamma2/gps/maxphi 360. deg
+/gate/source/Gamma2/dump 1
+
+#SOURCE3
+/gate/source/addSource Gamma3
+/gate/source/Gamma3/setActivity 0.0000000000000001 Ci
+/gate/source/Gamma3/gps/type Point
+/gate/source/Gamma3/gps/particle gamma
+/gate/source/Gamma3/gps/energytype Mono
+/gate/source/Gamma3/gps/monoenergy 662 keV
+/gate/source/Gamma3/gps/centre -250. 0. 1000. mm
+/gate/source/Gamma3/gps/angtype iso
+/gate/source/Gamma3/gps/mintheta 150. deg
+/gate/source/Gamma3/gps/maxtheta 180. deg
+/gate/source/Gamma3/gps/minphi 0. deg
+/gate/source/Gamma3/gps/maxphi 360. deg
+/gate/source/Gamma3/dump 1
+
+
+
+/gate/source/Gamma1/visualize 5000 green 10
+/gate/source/Gamma2/visualize 5000 yellow 10
+/gate/source/Gamma3/visualize 5000 magenta 10
+
+
+
+
+
+
+
+# O U T P U T
+
+
+
+/gate/output/ascii/enable
+
+/gate/output/ascii/setFileName ./cs10/10center
+
+/gate/output/ascii/setOutFileSinglesFlag 1
+
+/gate/output/ascii/setSingleMask 0 0 1 0 0 0 0 0 1 1 1 0 0 0 0 0 0 0
+
+
+
+#/gate/output/allowNoOutput
+
+
+
+
+
+# R A N D O M 
+
+/gate/random/setEngineName JamesRandom
+
+/gate/random/setEngineSeed auto
+
+/gate/random/verbose 0
+
+
+
+# V E R B O S I T Y
+
+/control/verbose 0
+
+/run/verbose 0
+
+/event/verbose 0
+
+/tracking/verbose 0
+
+ 
+
+/gate/application/setTimeSlice 1 s
+
+/gate/application/setTimeStart 0 s
+
+/gate/application/setTimeStop 3 s
+
+/gate/application/startDAQ
+
+

@@ -1,0 +1,4 @@
+DAWN_GUI.bat:wish80 c:\\Progra~1\\DAWN\\DAWN_GUI.tcl
+DAWN_GUI.cc:		if(!WISH) { WISH = "wish80";}
+autoexec.add:REM WISH=wish80.exe
+dawnvars.bat:REM WISH=wish80.exe

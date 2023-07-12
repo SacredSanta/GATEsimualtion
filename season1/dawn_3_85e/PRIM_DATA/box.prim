@@ -1,0 +1,22 @@
+##G4.PRIM-FORMAT-2.4
+###############################################################
+##  Box
+##
+##  /Box   dx, dy, dz  
+##  
+##    dx, dy, dz: half edge lengths along x, y, z direction
+###############################################################
+
+/BoundingBox -2.0 -5.0 -10.0 2.0 5.0 10.0
+!SetCamera
+!OpenDevice 
+!BeginModeling
+
+/ColorRGB 1 0 0 
+
+#       dx  dy  dz
+/Box    1   4   9  
+
+!EndModeling
+!DrawAll 
+!CloseDevice 

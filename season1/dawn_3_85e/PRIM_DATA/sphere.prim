@@ -1,0 +1,28 @@
+##G4.PRIM-FORMAT-2.4
+
+######################################################
+## Sphere
+## 
+## /Sphere     R
+##
+## R: radius
+#####################################################
+
+/BoundingBox -2.0 -2.0 -2.0   2.0  2.0  2.0
+!SetCamera
+!OpenDevice 
+!BeginModeling
+
+/ColorRGB 1 1 0
+
+#           R
+/Sphere     1.8 
+
+!EndModeling
+!DrawAll 
+!CloseDevice 
+
+
+
+
+

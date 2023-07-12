@@ -1,0 +1,22 @@
+//////////////////////////////
+///// FRSocketConfig.h   /////
+//////////////////////////////
+
+
+
+#if !defined SOCKET_CONFIG_H
+#define SOCKET_CONFIG_H
+
+// Select one from the list below
+
+#define    SOCKET_DEFAULT
+//#define     SOCKET_AIX
+//#define     SOCKET_IRIX
+//#define     SOCKET_SOLARIS
+//#define     SOCKET_REDHAT61
+
+///// NOT IMPLEMENTED //////////
+//#define     SOCKET_NT       
+                      
+
+#endif

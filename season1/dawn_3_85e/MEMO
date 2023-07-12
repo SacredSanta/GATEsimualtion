@@ -1,0 +1,169 @@
+##### MEMO for DAWN Developers
+
+#####
+sungeant (CERN):
+
+	### C++ compiler
+	CC = CC
+
+	### Optimization
+	OPTIMIZE = -O2
+
+	### Window shell
+	WISH = wish
+
+	### Xlib
+	XLIB_INC = -I/usr/openwin/include
+	XLIB_LIB = -L/usr/openwin/lib
+
+	### OpenGL 
+	OPENGL_INC  = -I/usr/local/include
+	OPENGL_INC += -I/usr/local/include/GL
+	OPENGL_LIB  = -L/usr/local/lib
+
+	### DAWN directory
+	INSTALL_DIR = /afs/cern.ch/rd44/dev/DAWN/SUN-CC
+
+#####
+lxplus (CERN):
+
+	### C++ compiler
+	CC = g++
+
+	### Optimization
+	OPTIMIZE = -O3
+
+	### Window shell
+	WISH = wish
+
+	### Xlib
+	XLIB_INC = -I/usr/X11R6/include
+	XLIB_LIB = -L/usr/X11R6/lib
+
+	### OpenGL (Mesa-3.0)
+	OPENGL_INC  = -I/usr/local/include
+	OPENGL_INC += -I/usr/local/include/GL
+	OPENGL_LIB  = -L/usr/local/lib
+
+	### DAWN directory
+	INSTALL_DIR = /afs/cern.ch/rd44/dev/DAWN/Linux-g++
+
+#####
+hpplus (CERN):
+
+	### C++ compiler
+	CC = aCC
+	# CC = CC
+
+	### Optimization
+	OPTIMIZE = +O2
+
+	### Window shell
+	WISH = wish
+
+	### OpenGL (Mesa-3.0)
+	OPENGL_INC  = -I/usr/local/include
+	OPENGL_INC += -I/usr/local/include/GL
+	OPENGL_LIB  = -L/usr/local/lib
+
+	### DAWN Directory 
+	INSTALL_DIR = /afs/cern.ch/rd44/dev/DAWN/HP-aCC
+
+#####
+dxplus (CERN):
+
+	### C++ compiler
+	CC = cxx
+
+	### Optimization
+	OPTIMIZE = -O2
+
+	### Window shell
+	WISH = wish
+
+	### OpenGL is not installed
+
+	### DAWN Directory 
+	INSTALL_DIR = /afs/cern.ch/rd44/dev/DAWN/ALPHA-cxx
+
+#####
+rsplus (CERN):
+
+	### C++ compiler
+	CC = xlC
+
+	### Optimization
+	OPTIMIZE = -O2
+
+	### Window shell
+	WISH = wish
+
+	### OpenGL (Mesa)
+	OPENGL_INC  = -I/afs/cern.ch/rd44/dev/Mesa/Mesa-1.2.8/include
+	OPENGL_INC += -I/afs/cern.ch/rd44/dev/Mesa/Mesa-1.2.8/include/GL
+	OPENGL_LIB = -L/afs/cern.ch/rd44/dev/Mesa/Mesa-1.2.8/lib
+
+	### DAWN directory
+	INSTALL_DIR = /afs/cern.ch/rd44/dev/DAWN/AIX-AFS
+
+
+
+#####
+arkoop  (KEK):
+
+	### C++ compiler
+	CC = aCC
+
+	### Optimization
+	OPTIMIZE = +O2 
+
+	### Window shell
+	WISH = wish
+
+	### Xlib
+	XLIB_INC = -I/kek/local/X11R6.3/include
+	XLIB_LIB = -L/kek/local/X11R6.3/lib
+
+	### OpenGL (Mesa)
+	OPENGL_INC  = -I/kek/local/include
+	OPENGL_INC += -I/kek/local/include/GL
+	OPENGL_LIB = -L/kek/local/lib
+
+	### DAWN Directory 
+	INSTALL_DIR = /home/tanaka/bin
+
+#####
+arksol1 (KEK):
+
+	### C++ compiler
+	CC = CC
+
+	### C++ compiler
+	CC = -O2
+
+	### Window shell
+	WISH = wish
+
+	### Xlib
+	XLIB_INC = 
+	XLIB_LIB = 
+
+	### OpenGL 
+	OPENGL_INC  = -I/kek/local/include
+	OPENGL_INC += -I/kek/local/include/GL
+	OPENGL_LIB = -L/kek/local/lib
+
+	### DAWN Directory 
+	INSTALL_DIR = /.../ccint.kek.jp/fs/group/geant4/gui+vis/bin
+
+
+#####
+i1dec2 (FUKUI):
+
+	### OpenGL lib directory
+	OPENGL_LIB = -L/usr/local/lib
+
+	### OpenGL (Mesa)
+	OPENGL_INC  = -I/usr/local/include/Mesa
+	OPENGL_INC += -I/usr/local/include/Mesa/GL
+	INSTALL_DIR = /usr/local/bin

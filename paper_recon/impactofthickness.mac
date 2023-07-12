@@ -1,0 +1,163 @@
+# iCZT coded aperture
+
+# 10 41.05 
+# 9 36.945
+# 8 32.84
+# 7 28.735
+# 6 24.63
+# 5 20.525
+# 4 16.42
+# 3 12.315
+# 2 8.21
+# 1 4.105
+# 0 0
+
+#/vis/disable
+# visualize : geometry를 보여주는것? 시뮬레이션 world
+# zore 64 -> figure 64... slow 
+
+/control/execute vis.mac
+
+# V I S U A L I S A T I O N
+/gate/geometry/setMaterialDatabase ../GateMaterials.db
+
+#WORLD
+/gate/world/geometry/setXLength 1200 cm
+/gate/world/geometry/setYLength 1200 cm
+/gate/world/geometry/setZLength 1200 cm
+
+#GEOMETRY
+/gate/world/daughters/name scanner
+/gate/world/daughters/insert box
+/gate/scanner/placement/setTranslation 0. 0. 3000. mm
+/gate/scanner/geometry/setXLength 300. mm
+/gate/scanner/geometry/setYLength 300. mm
+/gate/scanner/geometry/setZLength 300. mm
+/gate/scanner/setMaterial Air
+/gate/scanner/vis/forceWireframe
+
+#collimator
+/gate/scanner/daughters/name collimator
+/gate/scanner/daughters/insert box
+/gate/collimator/geometry/setXLength 87 mm
+/gate/collimator/geometry/setYLength 87 mm
+/gate/collimator/geometry/setZLength 20 mm
+/gate/collimator/placement/setTranslation 0. 0. -42.68 mm 
+/gate/collimator/setMaterial Tungsten
+/gate/collimator/vis/forceSolid
+
+
+
+#HOLE REPEATER
+/gate/collimator/daughters/name holes
+/gate/collimator/daughters/insert box
+/gate/holes/geometry/setXLength 4.105 mm
+/gate/holes/geometry/setYLength 4.105 mm
+/gate/holes/geometry/setZLength 20 mm
+/gate/holes/setMaterial Air
+/gate/holes/repeaters/insert genericRepeater
+/gate/holes/genericRepeater/useRelativeTranslation 0
+#If set to 0, the transformation is set as is
+/gate/holes/genericRepeater/setPlacementsFilename Rank11_centered.placements
+/gate/holes/vis/setColor black
+/gate/holes/vis/forceSolid
+
+
+
+#detector
+/gate/scanner/daughters/name detector
+/gate/scanner/daughters/insert box
+/gate/detector/geometry/setXLength 46.2 mm
+/gate/detector/geometry/setYLength 46.2 mm
+/gate/detector/geometry/setZLength 20 mm 
+/gate/detector/placement/setTranslation 0. 0. 0. mm 
+/gate/detector/setMaterial GAGG
+/gate/detector/vis/setColor white
+#/gate/detector/vis/forceSolid
+# tan(22.5) * 5000(Collimator to Source Distance) * 2 / 23 = 180.0928~ => 180
+#/gate/detector/vis/setVisible False
+
+
+
+
+
+
+#SYSTEM
+
+/gate/systems/scanner/level1/attach collimator
+
+/gate/systems/scanner/level2/attach detector
+
+/gate/detector/attachCrystalSD
+#검출기 능력 부여
+
+
+
+
+
+
+#PHYSICS
+/gate/physics/addProcess PhotoElectric gamma
+/gate/physics/processes/PhotoElectric/setModel StandardModel
+/gate/physics/addProcess Compton gamma
+/gate/physics/processes/Compton/setModel PenelopeModel
+/gate/physics/addProcess RayleighScattering gamma
+/gate/physics/processes/RayleighScattering/setModel PenelopeModel
+/gate/physics/addProcess ElectronIonisation e-
+/gate/physics/processes/ElectronIonisation/setModel StandardModel e-
+/gate/physics/addProcess Bremsstrahlung e-
+/gate/physics/processes/Bremsstrahlung/setModel StandardModel e-
+#/gate/physics/addProcess eMultipleScattering e-
+/gate/physics/processList Enabled
+/gate/physics/processList Initialized
+
+#DIGITIZER
+/gate/digitizer/Singles/insert adder
+/gate/digitizer/Singles/insert thresholder
+/gate/digitizer/Singles/thresholder/setThreshold 596. keV
+/gate/digitizer/Singles/insert upholder
+/gate/digitizer/Singles/upholder/setUphold 728. keV
+
+#INITIALIZE
+/gate/run/initialize
+# Activity(Origin) 5920000000
+
+
+#SOURCE3
+/gate/source/addSource Gamma2
+/gate/source/Gamma2/setActivity 0.00000000002 Ci 
+/gate/source/Gamma2/gps/type Point
+/gate/source/Gamma2/gps/particle gamma
+/gate/source/Gamma2/gps/energytype Mono
+/gate/source/Gamma2/gps/monoenergy 662 keV   
+/gate/source/Gamma2/gps/centre 0. 0. 995.32 mm
+/gate/source/Gamma2/gps/angtype iso
+/gate/source/Gamma2/gps/mintheta 150. deg 
+/gate/source/Gamma2/gps/maxtheta 180. deg 
+/gate/source/Gamma2/gps/minphi 0. deg
+/gate/source/Gamma2/gps/maxphi 360. deg
+/gate/source/Gamma2/dump 1
+
+# O U T P U T
+/gate/output/ascii/enable
+/gate/output/ascii/setFileName ./data/8mm_mosaic_0.01Ci/8mm_mosaic_0.02Ci
+/gate/output/ascii/setOutFileSinglesFlag 1
+/gate/output/ascii/setSingleMask 0 0 1 0 0 0 0 0 1 1 1 0 0 0 0 0 0 0
+#/gate/output/allowNoOutput
+
+# R A N D O M 
+/gate/random/setEngineName JamesRandom
+/gate/random/setEngineSeed auto
+/gate/random/verbose 0
+
+# V E R B O S I T Y
+/control/verbose 0
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+# A P P L I C A T I O N
+/gate/application/setTimeSlice 1 s
+/gate/application/setTimeStart 0 s
+/gate/application/setTimeStop 3 s
+/gate/application/startDAQ

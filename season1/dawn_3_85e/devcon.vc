@@ -1,0 +1,6 @@
+#if !defined DEV_CONTROL_H
+#define DEV_CONTROL_H
+
+#define USE_VC
+
+#endif

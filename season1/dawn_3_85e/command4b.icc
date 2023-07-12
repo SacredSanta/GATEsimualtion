@@ -1,0 +1,160 @@
+///////////////////////////
+/////  command4b.icc  /////
+///////////////////////////
+
+	//----- Command::openDevice()
+void	Command::openDevice (	Perspective&		camera	     ,
+				Parameter&              parameter    ,
+				PostScript&		ps           ,
+				X_Window&		xwin         , 
+				PS2X&			ps2x         ,
+				int			flag_immediate )
+{
+
+	Perspective* dummy_p = &camera ; dummy_p = 0 ;
+
+
+	flag_device_open = 1 ;
+		// flag_device_open is defined at the top of command4.cc
+
+	switch ( parameter.device_label ) {
+
+	 case XWIN: case XWIN2: 
+		this->open_X( ps, xwin, ps2x, parameter, flag_immediate );
+		break ;
+
+	 case PS: case PS2 :
+		this->open_PS( ps, parameter );
+		break ;
+	 default: 
+		cerr << "UNKNOWN DEVICE \n";
+		this->open_X( ps, xwin, ps2x, parameter, flag_immediate );
+	 }
+
+} // Command::openDevice ()
+
+
+
+	//----- Command::closeDevice()
+int	Command::closeDevice (	Parameter&              parameter    ,
+				PostScript&		ps           ,
+				X_Window&		xwin         , 
+				PS2X&			ps2x         )
+{
+
+		//----- close device if it is still open
+		//..... flag_device_open is defined at the top of this file
+	if( flag_device_open ) {
+
+		flag_device_open = 0 ;
+
+			//-----
+		switch ( parameter.device_label ) {
+
+		 case XWIN: case XWIN2 :
+			this->close_X( ps , xwin, ps2x );
+			break ;
+		 case PS: case PS2 :
+			this->close_PS  ( parameter , ps );
+			this->preview_PS( parameter      );
+			break ;
+		 default:
+			this->close_X( ps , xwin, ps2x );
+			break ;
+		} // switch
+
+	}
+
+		//------
+	return 1 ;
+	
+} // Command::closeDevice()
+
+
+
+	//-----  Command::drawAll()
+void Command::drawAll(	const Parameter&        parameter    ,
+			PostScript&		ps           ,
+			List<Object>&		objectServer ,
+			Perspective&		camera       ,
+			Hid&			hid          ,
+			HidLine&		hidline      ,  
+			char*			title          )
+{
+	switch ( parameter.drawing_mode ) {
+	 case WIREFRAME : 
+	 {
+		// Already drawn transiently
+		break ;
+
+	 } // WIREFRAME
+
+	 case WF_STORED : {
+		if( parameter.device_label == PS2 || parameter.device_label == XWIN2 ) {
+			this->drawLine_landscape_PS(	ps            ,
+							hidline      ,
+							parameter.blank_scale    );
+		} else {
+			this->drawLine_PS(	ps            ,
+						hidline      ,
+						parameter.blank_scale    );
+		}
+		break ;
+
+	 } // WF_STORED
+
+	 default: { // Hidden line/surface removal
+
+		if( parameter.device_label == PS2 || parameter.device_label == XWIN2 ) {
+			this->draw_Hid_landscape_PS(	parameter,
+							ps, 
+							hid , &objectServer ) ; 
+
+			this->drawLine_landscape_PS(	ps            ,
+							hidline      ,
+							parameter.blank_scale    );
+		} else {
+			this->draw_Hid_PS(	parameter,
+						ps, 
+						hid , &objectServer ) ; 
+
+			this->drawLine_PS(	ps            ,
+						hidline      ,
+						parameter.blank_scale    );
+		}
+
+		break ;
+
+	 } // default
+
+	} // switch ( parameter.drawing_mode )
+
+
+		//----------------------------//
+		//------ draw parameters -----//
+		//----------------------------//
+	if( parameter.flag_display_parameter ) {
+			//-----  
+		ps.setFont( "Times-Roman" , 24 );
+		this->drawString_PS( ps , title , 40, 10);
+
+			//-----
+		if( parameter.device_label == PS2 || parameter.device_label == XWIN2 ) {		
+			displayAxes_landscape_PS ( ps , camera , parameter );
+		} else {
+			displayAxes_PS           ( ps , camera , parameter );
+		}
+
+			//----- display parameters
+		ps.setFont( "Courier" , 12 );
+		ps.setRGB ( 0.0, 0.0, 0.0 ) ; 
+		this->drawString_PS( ps , "RED:X, GREEN:Y, BLUE:Z (No hidden-line removal for the axes)" , 10, 10);
+		this->displayParameter_PS(	ps        ,
+						camera    ,
+						parameter.epsilon2d  ,
+						parameter.epsilon3d  ) ;
+	} // if
+
+} // Command::drawAll()
+
+

@@ -1,0 +1,230 @@
+*******************************************************
+******** THIS  README  is for DAWN developers *********
+******** written in Japanese and EUC codes    *********
+*******************************************************
+
+////////////////////////////////////////////////////////////////////////
+//                                                                    //
+//                GUIメニュー生成支援C++クラスライブラリ              //
+//                                                                    //
+////////////////////////////////////////////////////////////////////////
+
+
+
+1 生成方法 
+
+ユーザープログラムは次のよう書く． 
+(DAWNのメニューの生成例)
+
+#include "FUMenu.h"
+
+int main(void)
+{
+	ofstream fp("dawn_gui_menu.tcl");
+	FUGenerator gen("Fukui Renderer DAWN",fp);
+		gen.setDefFile(".dawn");
+//ページの生成 
+//FUPage page("ページ名(省略可)")
+	FUPage page1("Camera"), page2("Light"), page3("Edge"), page4("Options");
+//ここからフレームを生成する． 
+// FUFrame frame("フレーム名(省略可)")
+	FUFrame frame1("  Camera Distance ( AUTO -- very large -- if non-positive )");
+	FUFrame frame2("  Camera Angle");
+	FUFrame frame3("  Auto Targetting");
+	FUFrame frame4("  default targetting point");
+	FUFrame frame5("  3D Tolerance");
+	FUFrame frame6("  Magnification (1.0 is full size, fd+number to give focal dist with 1x1 screen)");
+
+	FUFrame frame7("  Source  Light  R G B");
+	FUFrame frame8("  Ambient Light  R G B");
+	FUFrame frame9("  Light Direction");
+
+	FUFrame frame10("  Width of Real Edge      (mm, invisible if negative)");
+	FUFrame frame11("  Width of Outline        (mm, invisible if negative)");
+	FUFrame frame12("  Width of Auxiliary Edge (mm, invisible if negative)");
+	FUFrame frame13("  Style of Auxiliary Edge");
+	FUFrame frame14("  Threshold Angle Determine Auxiliary Edge");
+	FUFrame frame15("  Width of Line Objects (mm, 0.0 is minimum)");
+
+	FUFrame frame16("  Display Parameters");
+	FUFrame frame17("  Trimming");
+	FUFrame frame18("  Device");
+	FUFrame frame19("  Drawing Mode");
+	FUFrame frame20("  Swap Transparency");
+
+//1ページ目のユニット
+//エントリーの生成
+// FUEntry unit("エントリーのラベル名(省略可)")
+	FUEntry unit1;
+//スケールの生成
+// FUScale unit("スケールのラベル名(省略可)")
+	FUScale unit2("Polar");
+	FUScale unit3("Azimuthal");
+//ラジオボタンの生成
+// FUBaseRadiobutton unit このラジオボタンのベースに各ボタンを格納する
+// FURadiobutton subunit("ラジオボタンのラベル名","このボタンが押された時の出力値の指定")
+// 上記の2つを組みでラジオボタンを生成する．
+	FURadiobutton Yes("Yes","y");
+	FURadiobutton No("No","n");
+	FUBaseRadiobutton unit4;
+		unit4.setValue("y");
+		unit4.append(&Yes);//この2つを1組
+		unit4.append(&No); //
+
+	FUEntry unit5("X coord");
+	FUEntry unit6("Y coord");
+	FUEntry unit7("Z coord");
+
+	FUEntry unit8;
+		unit8.setValue(0.001);
+
+	FUEntry unit9;
+		unit9.setValue(0.9);
+
+//2ページ目のユニット
+// カラーの生成
+// FUColor unit 
+	FUColor unit10;
+		unit10.setMax(1);
+// color unit10
+// scale unit2 and unit3
+
+//3ページ目のユニット
+	FUEntry unit12;				//3 unit
+		unit12.setValue(0.1);
+
+	FURadiobutton Solid("Solid","1");
+	FURadiobutton Dashed("Dashed","2");
+	FURadiobutton Invisivle("Invisivle","3");
+	FUBaseRadiobutton unit13;
+		unit13.setValue(3);
+		unit13.append(&Solid);
+		unit13.append(&Dashed);
+		unit13.append(&Invisivle);
+
+	FUScale unit14;
+		unit14.setValue(0.1);
+
+// entry unit12
+
+//4ページ目のユニット
+	// radiobutton unit4
+	// radiobutton unit4
+
+	FURadiobutton EPS("EPS","1");
+	FURadiobutton X("X","2");
+	FURadiobutton EPSLS("EPS-LS","3");
+	FURadiobutton XLS("X-LS","4");
+	FURadiobutton OpenGL("OpenGL","5");
+	FUBaseRadiobutton unit15;
+		unit15.setValue(2);
+		unit15.append(&EPS);
+		unit15.append(&X);
+		unit15.append(&EPSLS);
+		unit15.append(&XLS);
+		unit15.append(&OpenGL);
+
+	FURadiobutton Wireframe("Wireframe","1");
+	FURadiobutton WFStored("WF-Stored","2");
+	FURadiobutton Lambert("Lambert","3");
+	FURadiobutton Line("Line","4");
+	FURadiobutton Phong("Phong","5");
+	FUBaseRadiobutton unit16;
+		unit16.setValue(1);
+		unit16.append(&Wireframe);
+		unit16.append(&WFStored);
+		unit16.append(&Lambert);
+		unit16.append(&Line);
+		unit16.append(&Phong);
+
+	FURadiobutton Yes1("Yes","1");
+	FURadiobutton No1("No","0");
+	FUBaseRadiobutton unit17;
+		unit17.setValue(1);
+		unit17.append(&Yes1);
+		unit17.append(&No1);
+
+//1ページ目のユニットを先ほど生成したフレームに格納
+// フレーム名.append(&ユニット名)
+	frame1.append(&unit1);
+	frame2.append(&unit2);
+	frame2.append(&unit3);
+	frame3.append(&unit4);
+	frame4.append(&unit5);
+	frame4.append(&unit6);
+	frame4.append(&unit7);
+	frame5.append(&unit8);
+	frame6.append(&unit9);
+
+//2ページ目のユニットを先ほど生成したフレームに格納
+	frame7.append(&unit10);
+	frame8.append(&unit10);
+	frame9.append(&unit2);
+	frame9.append(&unit3);
+
+//3ページ目のユニットを先ほど生成したフレームに格納
+	frame10.append(&unit12);
+	frame11.append(&unit12);
+	frame12.append(&unit12);
+	frame13.append(&unit13);
+	frame14.append(&unit14);
+	frame15.append(&unit12);
+
+//4ページ目のユニットを先ほど生成したフレームに格納
+	frame16.append(&unit4);
+	frame17.append(&unit4);
+	frame18.append(&unit15);
+	frame19.append(&unit16);
+	frame20.append(&unit17);
+	
+//1ページ目のフレームを先ほど生成したページに格納
+// ページ名.append(&フレーム名)
+	page1.append(&frame1);
+	page1.append(&frame2);
+	page1.append(&frame3);
+	page1.append(&frame4);
+	page1.append(&frame5);
+	page1.append(&frame6);
+
+//2ページ目のフレームを先ほど生成したページに格納
+	page2.append(&frame7);
+	page2.append(&frame8);
+	page2.append(&frame9);
+
+//3ページ目のフレームを先ほど生成したページに格納
+	page3.append(&frame10);
+	page3.append(&frame11);
+	page3.append(&frame12);
+	page3.append(&frame13);
+	page3.append(&frame14);
+	page3.append(&frame15);
+
+//4ページ目のフレームを先ほど生成したページに格納
+	page4.append(&frame16);
+	page4.append(&frame17);
+	page4.append(&frame18);
+	page4.append(&frame19);
+	page4.append(&frame20);
+
+//各ページをジェネレータに渡す
+	gen.append(&page1);
+	gen.append(&page2);
+	gen.append(&page3);
+	gen.append(&page4);
+
+	gen.output(); //メニューの出力
+	return 0;
+}
+
+2．ライブラリについて 
+
+以下の数値が変更可能である．
+
+FrameWIDTH_SUB 
+フレームのラベルのフォント幅とTcl/Tkの1文字の幅の違いの修正する．
+1つのラベル全体の文字数から，Tcl/Tkへ渡す文字数の内何文字減らすかを指定する．
+
+
+ButtonsMIN_SIZE   
+基本ボタンセットの1つのボタンの最小幅の指定．1つのボタンの長さを文字数で指定する．
+また．この指定により，メニューの最小幅も決まる． 

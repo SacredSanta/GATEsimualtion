@@ -1,0 +1,155 @@
+# architecture for imaging application
+# 1. define scanner geometry
+# 2. define phantom geometry
+# 3. set up physic process
+# 4. initialize the simulation    /gate/run/initialize
+# 5. set up detector model
+# 6. define source
+# 7. specify data output format
+# 8. start acquision
+
+# architecture for dosimetry and radiotherapy application
+# 1. define beam geometry
+# 2. define phantom geometry
+# 3. specify output
+# 4. set up physic process
+# 5. initialize simulation        /gate/run/initialize
+# 6. define source
+# 7. start simulation             /gate/application/setTotalNumberOfPrimaries [particle_number]
+#                                 /gate/application/start
+
+#/vis/viewer/panTo -5 -1
+#/vis/viewer/zoom 4.
+
+/control/execute vis.mac
+
+# V I E W E R
+#/vis/open OGLSX
+#/vis/viewer/zoom 4
+#/vis/viewer/set/viewpointThetaPhi 5 60
+#/vis/drawVolume
+#/tracking/storeTrajectory 0
+##/vis/scene/endOfEventAction accumulate 10
+#/vis/viewer/update
+#/vis/verbose 2
+#/vis/ogl/export
+
+/gate/geometry/setMaterialDatabase GateMaterials.db
+
+# W O R L D
+/gate/world/geometry/setXLength 400. cm
+/gate/world/geometry/setYLength 400. cm
+/gate/world/geometry/setZLength 400. cm
+
+/gate/world/daughters/name my_vol1
+
+# S Y S T E M
+/gate/world/daughters/name cylindricalPET
+/gate/world/daughters/insert cylinder
+/gate/cylindricalPET/setMaterial Water
+/gate/cylindricalPET/geometry/setRmax 100 mm
+/gate/cylindricalPET/geometry/setRmin 100 mm
+/gate/cylindricalPET/geometry/setHeight 100 mm
+/gate/cylindricalPET/vis/forceWireframe
+#/vis/viewer/zoom 3
+
+#Collimator
+/gate/cylindricalPET/daughters/name collimator
+/gate/cylindricalPET/daughters/insert box
+/gate/collimator/geometry/setXLength 37 mm
+/gate/collimator/geometry/setYLength 37 mm
+/gate/collimator/geometry/setZLength 8 mm
+/gate/collimator/placement/setTranslation 0. 0. 4. mm
+/gate/collimator/setMaterial Tungsten
+
+#Detector
+/gate/cylindricalPET/daughters/name detector
+/gate/cylindricalPET/daughters/insert box
+/gate/detector/geometry/setXLength 20 mm
+/gate/detector/geometry/setYLength 20 mm
+/gate/detector/geometry/setZLength 3.5 mm
+/gate/detector/placement/setTranslation 0. 0. 25.  mm
+/gate/detector/setMaterial GAGG
+/gate/detector/vis/setColor white
+/gate/detector/vis/forceWireframe
+
+#SYSTEM
+/gate/systems/cylindricalPET/rsector/attach collimator
+/gate/systems/cylindricalPET/module/attach detector
+/gate/detector/attachCrystalSD
+
+
+# PHYSICS
+
+/gate/physics/addProcess PhotoElectric gamma
+/gate/physics/processes/PhotoElectric/setModel StandardModel
+/gate/physics/addProcess Compton gamma
+/gate/physics/processes/Compton/setModel PenelopeModel
+/gate/physics/addProcess RayleighScattering gamma
+/gate/physics/processes/RayleighScattering/setModel PenelopeModel
+/gate/physics/addProcess ElectronIonisation e-
+/gate/physics/processes/ElectronIonisation/setModel StandardModel e-
+/gate/physics/addProcess Bremsstrahlung e-
+/gate/physics/processes/Bremsstrahlung/setModel StandardModel e-
+
+/gate/physics/processList Enabled
+/gate/physics/processList Initialized
+
+
+# DIGITIZER
+
+/gate/digitizer/Singles/insert adder
+/gate/digitizer/Singles/insert thresholder
+/gate/digitizer/Singles/thresholder/setThreshold 596. keV
+/gate/digitizer/Singles/insert upholder
+/gate/digitizer/Singles/upholder/setUphold 728. keV
+
+
+#INITIALIZE
+/gate/run/initialize
+
+
+#SOURCE3
+/gate/source/addSource Gamma2
+/gate/source/Gamma2/setActivity 0.01 Ci
+/gate/source/Gamma2/gps/type Point
+/gate/source/Gamma2/gps/particle gamma
+/gate/source/Gamma2/gps/energytype Mono
+/gate/source/Gamma2/gps/monoenergy 662 keV
+/gate/source/Gamma2/gps/centre 0. 0. 1000. mm
+/gate/source/Gamma2/gps/angtype iso
+/gate/source/Gamma2/gps/mintheta 150. deg
+/gate/source/Gamma2/gps/maxtheta 180. deg
+/gate/source/Gamma2/gps/minphi 0. deg
+/gate/source/Gamma2/gps/maxphi 360. deg
+/gate/source/Gamma2/dump 1
+
+# OUTPUT
+
+/gate/output/ascii/enable
+/gate/output/ascii/setFileName ./testdata
+/gate/output/ascii/setOutFileSinglesFlag 1
+/gate/output/ascii/setSingleMask 0 0 1 0 0 0 0 0 1 1 1 0 0 0 0 0 0 0
+
+
+# RANDOM
+/gate/random/setEngineName JamesRandom
+/gate/random/setEngineSeed auto
+/gate/random/verbose 0
+
+
+
+
+# VERBOSITY
+/control/verbose 0 
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+
+# APPLICATION
+/gate/application/setTimeSlice 1 s
+/gate/application/setTimeStart 0 s
+/gate/application/setTimeStop 3 s
+/gate/application/startDAQ
+ 

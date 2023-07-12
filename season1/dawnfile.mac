@@ -1,0 +1,8 @@
+/vis/open DAWNFILE
+/vis/viewer/reset
+/vis/viewer/set/viewpointThetaPhi 30 0
+/vis/viewer/zoom 1.5
+/vis/drawVolume
+/tracking/storeTrajectroy 1
+/vis/scene/endOfEventAction accumulate
+/vis/viewer/update /vis/viewer/refresh

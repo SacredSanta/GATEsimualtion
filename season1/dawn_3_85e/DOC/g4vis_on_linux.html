@@ -1,0 +1,209 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=x-sjis">
+<META NAME="Generator" CONTENT="Microsoft Word 97">
+<TITLE>How to Perform Geant4 Visualization on </TITLE>
+<META NAME="Template" CONTENT="C:\Program Files\Microsoft Office\Office\html.dot">
+</HEAD>
+<BODY LINK="#0000ff" VLINK="#800080" BGCOLOR="#ccffff">
+
+<B><FONT FACE="Century" SIZE=6 COLOR="#0000ff"><P ALIGN="CENTER">How to Perform Geant4 Visualization <BR>
+on Linux </P>
+</FONT><FONT FACE="ÇlÇr ÉSÉVÉbÉN" LANG="JA"><P ALIGN="CENTER">August 31, 1999 (version 00)<BR>
+September 02,1999 (version 01)<BR>
+September 07,1999 (version 02)<BR>
+September 30,1999 (version 03)<BR>
+November 02,1999 (version 04)<BR>
+January 26, 2000 (version 05)<BR>
+May 10, 2000 (version 06)</P>
+<P ALIGN="CENTER">Satoshi Tanaka (Fukui University)</P>
+<P ALIGN="CENTER">Å@</P>
+</FONT><FONT FACE="ÇlÇr ÇoÉSÉVÉbÉN" LANG="JA" COLOR="#800000"><P>1. Introduction</P>
+</B></FONT><FONT FACE="ÇlÇr ÇoÉSÉVÉbÉN" LANG="JA"><P>This Web page describes how to compile Geant4 for visualization on Linux with the following setting up: (1) CLHEP library version 1.4, STL library, and Mesa-3.0 (a free OpenGL library) are used for compiling Geant4 libraries and executables. (2) The DAWNFILE, OpenGL-Xlib and VRMLFILE drivers are adopted for Geant4 visualization. The description below is checked with RedHat Linux 6.0, and expected to be valid for many other Linux pacages.</P>
+<P>Å@</P>
+</FONT><B><FONT FACE="ÇlÇr ÉSÉVÉbÉN" LANG="JA" COLOR="#800000"><P>2. Required C++ compiler (egcs) etc</P>
+</B></FONT><FONT FACE="ÇlÇr ÉSÉVÉbÉN" LANG="JA"><P>In order to compile Geant4 and CLHEP 1.4, you need the egcs C++ (g++) compiler version 1.1. For example, the package of RedHat Linux 6.0 includes the right one. If you are using another package of Linux or an older version of RedHat Linux, you may have to update the egcs compiler. You may also have to update related libraries. You can know the installed version of the egcs compiler with the command "g++ -v". For more details, see the Web page of Naruto University of Education:<BR>
+</FONT><A HREF="http://erpc1.naruto-u.ac.jp/~geant4"><FONT FACE="ÇlÇr ñæí©" LANG="JA">http://erpc1.naruto-u.ac.jp/~geant4</FONT></A><FONT FACE="ÇlÇr ñæí©" LANG="JA"> .</P>
+<P>The egcs compiler includes the STL library, and you can use it by setting an environmental variable (or the corresponding C-macro in "/geant4/config/architecture.gmk") as follows:</P>
+<P>% setenv G4USE_STL 1</P>
+<P>Å@</P>
+</FONT><B><FONT FACE="ÇlÇr ñæí©" LANG="JA" COLOR="#800000"><P>3. Installation of CLHEP 1.4</P>
+</B></FONT><FONT FACE="ÇlÇr ñæí©" LANG="JA"><P>You should obtain the CLHEP 1.4 source codes first. Detailed information on CLHEP is described at </FONT><A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/index.html"><FONT FACE="ÇlÇr ñæí©" LANG="JA">http://wwwinfo.cern.ch/asd/lhc++/clhep/index.html</FONT></A><FONT FACE="ÇlÇr ñæí©" LANG="JA"> . </P>
+<P>The installation of CLHEP is very easy:</P>
+<P>% gtar xvzf clhep-1.4.0.0.tar.gz<BR>
+% cd ./CLHEP<BR>
+% autoconf<BR>
+% ./configure<BR>
+% gmake <BR>
+% su<BR>
+# gmake install<BR>
+# cd /usr/local/lib<BR>
+# ln -s libCLHEP-g++.a libCLHEP.a</P>
+<P>In this default way of installation, CLHEP 1.4 is installed under "/usr/local/", i.e. "/usr/local/lib/" and "/usr/local/include/CLHEP/".</P>
+<P>Å@</P>
+</FONT><B><FONT FACE="ÇlÇr ñæí©" LANG="JA" COLOR="#800000"><P>4. Installation of Mesa (OpenGL)</P>
+<P>4.1 Mesa 3.0</P>
+</B></FONT><FONT FACE="ÇlÇr ñæí©" LANG="JA"><P>You can obtain the source codes of Mesa-3.0 (a free OpenGL library) from the following Web site: </FONT><A HREF="http://www.mesa3d.org/"><FONT FACE="ÇlÇr ñæí©" LANG="JA">http://www.mesa3d.org</FONT></A><FONT FACE="ÇlÇr ñæí©" LANG="JA"> . The installation is quite easy. If you want to install Mesa-3.0 under, for example, "/usr/local/Mesa-3.0/", do as follows:</P>
+<P>% gtar xvzf MesaLib-3.0.tar.gz<BR>
+% cd Mesa-3.0<BR>
+% gmake <BR>
+(# Excecuting "gmake" without an argument displays list of supported platform.)<BR>
+% gmake linux<BR>
+% su<BR>
+# mkdir /usr/local/Mesa-3.0<BR>
+# cp -r ./lib /usr/local/Mesa-3.0<BR>
+# cp -r ./include /usr/local/Mesa-3.0<BR>
+# cd /usr/local/Mesa-3.0<BR>
+# ln -s libMesaGL.a libGL.a<BR>
+# ln -s libMesaGLU.a libGLU.a</P>
+<P>If you have the RPM package of Mesa-3.0, you can install it as follows:</P>
+<P>% su<BR>
+# rpm -i Mesa-devel-3.0-X.i386.rpm</P>
+<P>In this case, Mesa is installed under the directory "/usr/".</P>
+<P>Å@</P>
+</FONT><B><FONT FACE="ÇlÇr ñæí©" LANG="JA" COLOR="#800000"><P>4.2 Mesa 3.1</P>
+</B></FONT><FONT FACE="ÇlÇr ñæí©" LANG="JA"><P>You can obtain the source codes of Mesa-3.1 (a free OpenGL library) from the following Web site: </FONT><A HREF="http://www.mesa3d.org/"><FONT FACE="ÇlÇr ñæí©" LANG="JA">http://www.mesa3d.org</FONT></A><FONT FACE="ÇlÇr ñæí©" LANG="JA"> . The installation is quite easy. If you want to install Mesa-3.1 under, for example, "/usr/local/Mesa-3.1/", do as follows:</P>
+<P>% gtar xvzf MesaLib-3.1.tar.gz<BR>
+% cd Mesa-3.1<BR>
+% gmake <BR>
+(# Excecuting "gmake" without an argument displays list of supported platform.)<BR>
+% gmake linux<BR>
+% su<BR>
+# mkdir /usr/local/Mesa-3.1<BR>
+# cp -r ./lib /usr/local/Mesa-3.1<BR>
+# cp -r ./include /usr/local/Mesa-3.1</P>
+<P>If you have the RPM package of Mesa, you can install it as follows:</P>
+<P>% su<BR>
+# rpm -i Mesa-devel-3.1-X.i386.rpm</P>
+<P>In this case, Mesa is installed under the directory "/usr/".</P>
+<P>Å@</P>
+<B><P>WARNING</B>: * Temporarily, do not use Mesa 3.1 with Geant4 OpenGL driver.</P>
+</FONT><B><FONT FACE="ÇlÇr ñæí©" LANG="JA" COLOR="#800000"><P>Å@</P>
+<P>5. Installation of Fukui Renderer DAWN</P>
+</B></FONT><FONT FACE="ÇlÇr ñæí©" LANG="JA"><P>See the following Web page:<BR>
+</FONT><A HREF="http://geant4.kek.jp/~tanaka/DAWN/About_DAWN.html"><FONT FACE="ÇlÇr ñæí©" LANG="JA">http://geant4.kek.jp/~tanaka/DAWN/About_DAWN.html</FONT></A></P>
+<FONT FACE="ÇlÇr ñæí©" LANG="JA"><P>Å@</P>
+<B><P>WARNING </B>:You must use DAWN 3.80 or after for Geant4 visualization.</P>
+<P>Å@</P>
+</FONT><B><FONT FACE="ÇlÇr ñæí©" LANG="JA" COLOR="#800000"><P>6. Setting environmental variables (1)</P>
+</B></FONT><FONT FACE="ÇlÇr ñæí©" LANG="JA"><P>In order to compile Geant4 for visualization, you have to set several environmental variables beforehand. (Equivalently, you can also edit macros of GNUmakefile's in the directory "geant4/config/".).</P>
+<P>Adding the following to your ".cshrc" allows you to perform Geant4 visualization with the DAWNFILE, OpenGL, and VRMLFILE drivers:<BR>
+(You may have to do some coutomazation for your own setting up, of course.) </P>
+<P>Å@</P>
+<P>#####################################################<BR>
+# Sample .cshrc for Geant4 visualization on Linux<BR>
+#####################################################</P>
+<P>###### 1. General setting <BR>
+setenv G4SYSTEM Linux-g++<BR>
+setenv G4USE_STL 1<BR>
+setenv CLHEP_BASE_DIR /usr/local<BR>
+# setenv CLHEP_BASE_DIR /usr/local/CLHEP</P>
+<P>###### 2. UI </P>
+<P>############ 2-1. Selection of (G)UI in installation of libraries<BR>
+setenv G4UI_BUILD_TERMINAL_SESSION 1<BR>
+setenv G4UI_BUILD_GAG_SESSION 1</P>
+<P>############ 2-2. Selection of (G)UI in compiling executables<BR>
+setenv G4UI_USE_TERMINAL 1<BR>
+setenv G4UI_USE_GAG 1</P>
+<P>###### 3. Visualization </P>
+<P>############ 3-1. Home directory of Mesa <BR>
+setenv OGLHOME /usr/local/Mesa-3.0</P>
+<P>############ 3-2. Selection of visualization drivers <BR>
+# in installation of libraries<BR>
+setenv G4VIS_BUILD_DAWNFILE_DRIVER 1<BR>
+setenv G4VIS_BUILD_OPENGLX_DRIVER 1<BR>
+setenv G4VIS_BUILD_VRMLFILE_DRIVER 1<BR>
+# setenv G4VIS_BUILD_DAWN_DRIVER 1<BR>
+# setenv G4VIS_BUILD_OPACS_DRIVER 1<BR>
+# setenv G4VIS_BUILD_OPENGLXM_DRIVER 1<BR>
+# setenv G4VIS_BUILD_OPENINVENTOR_DRIVER 1<BR>
+# setenv G4VIS_BUILD_RAYX_DRIVER 1<BR>
+# setenv G4VIS_BUILD_VRML_DRIVER 1</P>
+<P>############ 3-3. Selection of visualization drivers <BR>
+# in compiling executables<BR>
+setenv G4VIS_USE_DAWNFILE 1<BR>
+setenv G4VIS_USE_OPENGLX 1<BR>
+setenv G4VIS_USE_VRMLFILE 1<BR>
+# setenv G4VIS_USE_DAWN 1<BR>
+# setenv G4VIS_USE_OPACS 1<BR>
+# setenv G4VIS_USE_OPENGLXM 1<BR>
+# setenv G4VIS_USE_OPENINVENTOR 1<BR>
+# setenv G4VIS_USE_RAYX 1<BR>
+# setenv G4VIS_USE_VRML 1</P>
+<P>Å@</P>
+</FONT><B><FONT FACE="ÇlÇr ñæí©" LANG="JA" COLOR="#800000"><P>7. Setting environmental variables (2)</P>
+</B></FONT><FONT FACE="ÇlÇr ñæí©" LANG="JA"><P>The followings are templates for customizing the Geant4 DAWNFILE visualization driver and Fukui Renderer DAWN.</P>
+<P>Å@</P>
+<P>############################################################<BR>
+# Customization of the Geant4 DAWNFILE visualization driver<BR>
+############################################################</P>
+<P>###### 4. Customization of the DAWNFILE driver and renderer DAWN <BR>
+# Note: For renderer DAWN, "dawn -H" displays all available <BR>
+# environmental variables.</P>
+<P>############ 4.1 On-line use of DAVID (a volume-overlapping debugger)<BR>
+#<BR>
+# setenv G4DAWNFILE_VIEWER david</P>
+<P>############ 4.2 Off-line visualization <BR>
+# with the batch mode of renderer DAWN<BR>
+# 1: batch mode<BR>
+# a: batch-append mode (multi-page g4.eps file)<BR>
+#<BR>
+# setenv DAWN_BATCH a</P>
+<P>############ 4.3 Selection of a PostScript viewerer <BR>
+# in on-line and off-line visualization <BR>
+# with renderer DAWN (The default is "gv")<BR>
+#<BR>
+# For on-line visualization:<BR>
+#  setenv G4DAWNFILE_PS_VIEWER gv<BR>
+#<BR>
+# For off-line visualization of a generated "g4.prim" file <BR>
+# with renderer DAWN: <BR>
+#  setenv DAWN_PS_PREVIEWER gv</P>
+<P>############ 4.4 Making the multi-window mode default<BR>
+# 0: PostScript file generation (default)<BR>
+# 1: multiple X-windows<BR>
+#<BR>
+# setenv G4DAWNFILE_MULTI_WINDOW 0 </P>
+<P>############ 4.5 Output directory of "g4.prim" and "g4.eps" files<BR>
+# Note 1: The default is the current directory.<BR>
+# Note 2: Do not forget to append "/"<BR>
+#<BR>
+# setenv G4DAWNFILE_DEST_DIR /tmp/ </P>
+<P>############ 4.6 Automatic increment of output file names <BR>
+# USAGE: setenv G4DAWNFILE_MAX_FILE_NUM n<BR>
+# (n: a positive integer)<BR>
+# DAWN-format files: g4.prim, g4_1.prim, g4_2.prim,<BR>
+# Åc, g4_(n-1).prim<BR>
+# EPS files : g4.eps , g4_1.eps , g4_2.eps,<BR>
+# Åc, g4_(n-1).eps <BR>
+# Note: Be careful for "explosion" of your disk space.<BR>
+#<BR>
+# setenv G4DAWNFILE_MAX_FILE_NUM 10</P>
+<P>Å@</P>
+<P>As for environmental variables to customize Fukui Renderer DAWN, see <BR>
+the following page: </FONT><A HREF="http://geant4.kek.jp/~tanaka/DAWN/DAWN_ENV.html"><FONT FACE="ÇlÇr ñæí©" LANG="JA">http://geant4.kek.jp/~tanaka/DAWN/DAWN_ENV.html</FONT></A></P>
+<B><FONT FACE="ÇlÇr ñæí©" LANG="JA" COLOR="#800000"><P>Å@</P>
+<P>8. Setting environmental variables (3) <BR>
+(This section has not been completed yet.)</P>
+</B></FONT><FONT FACE="ÇlÇr ñæí©" LANG="JA"><P>The followings are templates for customizing the Geant4 VRMLFILE visualization driver.</P>
+</FONT><B><FONT FACE="ÇlÇr ñæí©" LANG="JA" COLOR="#800000"><P>Å@</P>
+</B></FONT><FONT FACE="ÇlÇr ñæí©" LANG="JA"><P>###### 5. Customization of the VRMLFILE driver </P>
+<P>############ 5.1 On-line visualization of VRML files and <BR>
+# selection a VRML viewer<BR>
+#<BR>
+# setenv G4VRMLFILE_VIEWER vrweb</P>
+</FONT><B><FONT FACE="ÇlÇr ñæí©" LANG="JA" COLOR="#800000"><P>Å@</P>
+<P>9. Installation, compilation, and execution of Geant4</B></FONT><FONT FACE="ÇlÇr ñæí©" LANG="JA"><BR>
+You can install Geant4 libraries, compile the official example placed under geant4/examples/novice/N03, and perform Geant4 visualization as follows:</P>
+<B><P>Installation of Geant4 libraries:</B><BR>
+% cd geant4/source<BR>
+% gmake </P>
+<B><P>Compilation of an official example:</B><BR>
+% cd geant4/examples/novice/N03<BR>
+% gmake</P>
+<B><P>Execution of Geant4 visualization: <BR>
+</B>(Edit "prerunN03.mac" beforehand to choose a default visualization driver, if necessary.)<B><BR>
+</B>% ../../../bin/Linux-g++/exampleN03<BR>
+Idle&gt; /run/beamOn</P>
+<P>Å@</P></FONT></BODY>
+</HTML>

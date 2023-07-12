@@ -1,0 +1,394 @@
+##G4.PRIM-FORMAT-2.4
+
+##############################
+# Geometry of LBNO detector  #
+##############################
+
+/BoundingBox  -6000  -12000  -10000  6000  12000  10000
+!SetCamera
+!OpenDevice
+!BeginModeling
+/Ndiv  24
+/ColorRGB  1  0  0
+/ForceWireframe  1 
+/Origin  0  0  0
+/BaseVector  1  0  0  0  1  0
+/Box  6000  12000  10000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1000  0
+/BaseVector  1  0  0  0  1  0
+/Box  1600  650  1600
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1000  0
+/BaseVector  1  0  0  0  1  0
+/Box  1590  640  1590
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  400  0
+/BaseVector  1  0  0  0  1  0
+/Box  1590  1  1590
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  460  0
+/BaseVector  1  0  0  0  1  0
+/Box  1590  1  1590
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  520  0
+/BaseVector  1  0  0  0  1  0
+/Box  1590  1  1590
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  580  0
+/BaseVector  1  0  0  0  1  0
+/Box  1590  1  1590
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  640  0
+/BaseVector  1  0  0  0  1  0
+/Box  1590  1  1590
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  700  0
+/BaseVector  1  0  0  0  1  0
+/Box  1590  1  1590
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  760  0
+/BaseVector  1  0  0  0  1  0
+/Box  1590  1  1590
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  820  0
+/BaseVector  1  0  0  0  1  0
+/Box  1590  1  1590
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  880  0
+/BaseVector  1  0  0  0  1  0
+/Box  1590  1  1590
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  940  0
+/BaseVector  1  0  0  0  1  0
+/Box  1590  1  1590
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1000  0
+/BaseVector  1  0  0  0  1  0
+/Box  1590  1  1590
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1060  0
+/BaseVector  1  0  0  0  1  0
+/Box  1590  1  1590
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1120  0
+/BaseVector  1  0  0  0  1  0
+/Box  1590  1  1590
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1180  0
+/BaseVector  1  0  0  0  1  0
+/Box  1590  1  1590
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1240  0
+/BaseVector  1  0  0  0  1  0
+/Box  1590  1  1590
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1300  0
+/BaseVector  1  0  0  0  1  0
+/Box  1590  1  1590
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1360  0
+/BaseVector  1  0  0  0  1  0
+/Box  1590  1  1590
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1420  0
+/BaseVector  1  0  0  0  1  0
+/Box  1590  1  1590
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1480  0
+/BaseVector  1  0  0  0  1  0
+/Box  1590  1  1590
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1540  0
+/BaseVector  1  0  0  0  1  0
+/Box  1590  1  1590
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1600  0
+/BaseVector  1  0  0  0  1  0
+/Box  1590  1  1590
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1000  -1220
+/BaseVector  1  0  0  0  1  0
+/Tubs  1746.36  2139  305  0.785398  0.785398
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1000  -1220
+/BaseVector  1  0  0  0  1  0
+/Tubs  1746.36  2129  305  0.785398  0.785398
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1000  -1220
+/BaseVector  1  0  0  0  1  0
+/Tubs  1746.36  2139  305  1.5708  0.785398
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1000  -1220
+/BaseVector  1  0  0  0  1  0
+/Tubs  1746.36  2129  305  1.5708  0.785398
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1000  -610
+/BaseVector  1  0  0  0  1  0
+/Tubs  1746.36  2139  305  0.785398  0.785398
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1000  -610
+/BaseVector  1  0  0  0  1  0
+/Tubs  1746.36  2129  305  0.785398  0.785398
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1000  -610
+/BaseVector  1  0  0  0  1  0
+/Tubs  1746.36  2139  305  1.5708  0.785398
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1000  -610
+/BaseVector  1  0  0  0  1  0
+/Tubs  1746.36  2129  305  1.5708  0.785398
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1000  0
+/BaseVector  1  0  0  0  1  0
+/Tubs  1746.36  2139  305  0.785398  0.785398
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1000  0
+/BaseVector  1  0  0  0  1  0
+/Tubs  1746.36  2129  305  0.785398  0.785398
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1000  0
+/BaseVector  1  0  0  0  1  0
+/Tubs  1746.36  2139  305  1.5708  0.785398
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1000  0
+/BaseVector  1  0  0  0  1  0
+/Tubs  1746.36  2129  305  1.5708  0.785398
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1000  610
+/BaseVector  1  0  0  0  1  0
+/Tubs  1746.36  2139  305  0.785398  0.785398
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1000  610
+/BaseVector  1  0  0  0  1  0
+/Tubs  1746.36  2129  305  0.785398  0.785398
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1000  610
+/BaseVector  1  0  0  0  1  0
+/Tubs  1746.36  2139  305  1.5708  0.785398
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1000  610
+/BaseVector  1  0  0  0  1  0
+/Tubs  1746.36  2129  305  1.5708  0.785398
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1000  1220
+/BaseVector  1  0  0  0  1  0
+/Tubs  1746.36  2139  305  0.785398  0.785398
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1000  1220
+/BaseVector  1  0  0  0  1  0
+/Tubs  1746.36  2129  305  0.785398  0.785398
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1000  1220
+/BaseVector  1  0  0  0  1  0
+/Tubs  1746.36  2139  305  1.5708  0.785398
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  1000  1220
+/BaseVector  1  0  0  0  1  0
+/Tubs  1746.36  2129  305  1.5708  0.785398
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  4100  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  100  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  4250  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  50  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  4400  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  100  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  4550  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  50  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  4700  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  100  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  4850  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  50  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  5000  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  100  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  5150  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  50  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  5300  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  100  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  5450  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  50  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  5550  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  50  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  5700  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  100  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  5850  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  50  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  5950  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  50  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  6100  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  100  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  6250  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  50  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  6350  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  50  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  6500  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  100  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  6650  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  50  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  6750  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  50  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  6900  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  100  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  7050  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  50  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  7150  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  50  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  7300  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  100  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  7450  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  50  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  7550  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  50  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  7700  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  100  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  7850  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  50  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  7950  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  50  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  8100  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  100  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  8250  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  50  4000
+/ColorRGB  1  1  1
+/ForceWireframe  0 
+/Origin  0  8350  0
+/BaseVector  1  0  0  0  1  0
+/Box  4000  50  4000
+!EndModeling
+!DrawAll
+!CloseDevice

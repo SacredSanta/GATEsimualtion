@@ -1,0 +1,104 @@
+<< Fukui Renderer DAWN Version 3.80a >>
+
+* Summary of updation:
+	* "Append mode" is supported and added 
+	  to the 4th page of the GUI panel
+	* "Batch mode" is available with 
+	  "setenv DAWN_BATCH 1/a (batch/batch+append)"
+        * Messages displayed with -h option (help message) 
+	  is updated.
+	* -H option is added to display the list of available
+	  environmental variables.
+
+* Append mode:
+
+  This mode makes generated PostScript data "accumulate" 
+  in one PostScript data.
+
+   # USAGE 1: Accumulative visualization 
+
+           In the 4th page of the GUI panel,
+             Add showpage ==> off
+             Append mode  ==> on
+
+           Then, for example, 
+
+             % dawn g4.prim   ... e.g. detector 
+             .....
+             % dawn g4.prim   ... e.g. event 
+             .....
+
+           In the cooperative use with Geant4, "dawn g4.prim" is 
+           replaced with a proper visualization command.
+
+           In the first visualization, for example, 
+           you can visualize a detector.
+           The corresponding PostScript data is saved 
+           in a file g4.eps.
+           In the second visualization, you can visualize an event.
+           The PostScript data is "appended" to the same page of the 
+           same file g4.eps.
+
+           Thus the accumulative visualization is performed.
+
+   # USAGE 2: Multi-page PostScript file generation
+
+           In the 4th page of the GUI panel,
+             Add showpage ==> on
+             Append mode  ==> on
+
+           Then, for example, 
+
+             % dawn g4.prim   ... e.g. the first  "/run/beanOn" data
+             .....
+             % dawn g4.prim   ... e.g. the second "/run/beanOn" data
+             .....
+
+           In the cooperative use with Geant4, "dawn g4.prim" is 
+           replaced with a proper visualization command.
+
+           In the first visualization, for example, 
+           you can visualize the first "/run/beanOn" data, 
+           which  are "detector" + "the first event".
+           The corresponding PostScript data is saved 
+           in a file g4.eps.
+           In the second visualization, you can visualize 
+           the second "/run/beanOn" data, 
+           which  are "detector" + "the second event".
+           The PostScript data is "appended" to the next page of the 
+           same file g4.eps.
+
+           Thus the multi-page visualization, which is available for 
+           "slide show" etc, can be performed.
+
+           If you have knowleges on the PostScript language,
+           you can comment out the "showpage"'s and revise the 
+           multi-page PostScript file into a single-page file for 
+           accumulative visualization.
+           
+* Batch mode:
+
+           This mode makes DAWN available even at a character-based 
+           terminal. This mode makes DAWN a simple PostScript-file 
+           generator, making DAWN skip to invoke the GUI and the viewer.
+
+           You can run DAWN with the batch mode by setting 
+           an environmental variable as follows:
+
+            % setenv DAWN_BATCH 1  ..... batch mode
+            % setenv DAWN_BATCH a  ..... batch mode + multi-page append mode 
+
+           Rendering parameters can be set as follows:
+
+           (1) If there is a parameter file ".DAWN_1.history", 
+               which is generated in the previous visualization,
+               in the current directory, then the parameters described 
+               there are used.
+               Execute DAWN with -c option ("dawn -c") to remove 
+               the parameter file.
+
+           (2) In the cooperative use with Geant4, 
+               rendering parameters given with the Geant4 commands 
+               are used.
+
+Enjoy!

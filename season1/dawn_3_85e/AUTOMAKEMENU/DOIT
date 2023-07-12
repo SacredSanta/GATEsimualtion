@@ -1,0 +1,49 @@
+* Revise dawn_menu.cc, dawn_devindep.cc, dawn_nogl.cc
+	* add bottons          (items)
+	* add items to pages   (pageX.append(...))
+	* .DAWN_X     (to be common to GL, nogl, devindep)
+	* GUI version (X-GL, X-NG, X-DI)
+
+* make 
+	% make -f Makefile
+	% wish -f DAWN_GUI_menu.body
+	% ls   .DAWN* 
+	% less .DAWN_X.history
+	% rm -i .DAWN*
+	
+	% make -f Makefile_nogl
+	% wish -f DAWN_GUI_menu_nogl.body
+	% less .DAWN_X.history
+	% rm -i .DAWN*
+
+	% make -f Makefile_devindep
+	% wish -f DAWN_GUI_menu_devindep.body
+	% less .DAWN_X.history
+	% rm -i .DAWN*
+
+* cd ../
+
+* DEFAULT_HISTORY_FILE (parameter.h)
+
+* Check "dawn -c" (Command::analyziOption()) 
+ 
+* Check functions in command2.cc (I/O)
+	* readHistoryFile()
+	* writeParameterToHistoryFile()
+	* PrintParameter()	
+	* others if necessary
+
+* Revise Command::inputParameter_Tk() 
+	* Additional action based on read parameter 
+	* Error (inconsistency) recovery for the read parameter
+
+* Generate DAWN_GUI.tcl for WinDAWN
+
+* % ./configure_min
+  % make guiclean
+  % make DAWN_GUI
+  % cp -i DAWN_GUI DAWN_GUI.tcl
+
+  * Edit DAWN_GUI.tcl
+    * Remove lines before the header comment.
+    * Replace "gv" with "gsview32"

@@ -1,0 +1,64 @@
+/gate/run/initialize
+
+/gate/geometry/setMaterialDatabase GateMaterials.db
+
+
+
+# V I E W E R
+
+/vis/open OGL
+/vis/viewer/zoom 1.5
+/vis/viewer/set/viewpointThetaPhi 5 60
+/vis/viewer/panTo -5 -1
+/vis/viewer/zoom 4
+
+
+#Set the drawing style
+/vis/viewer/set/style surface
+
+#Tell the viwer to draw the volumes
+/vis/drawVolume
+
+/tracking/storeTrajectory 1
+# The trajectories for each run should be drawn together. Don't store trajectories = 0; store stajectories = 1
+
+/vis/scene/endOfEventAction accumulate
+# Requests viewer to refresh hits, tracks, etc., at end of event. Or to accumulate drawings. Detector remains or is redrawn.
+
+
+#/gate/crystal/vis/setVisible 0
+#cylindrical PET system has huge number of crystals. We decrease the file size and speed up the visualization, by above statement
+
+#/gate/block/vis/forceWireframe
+# draw object in WireFrame Mode
+
+#/gate/block/vis/forceSolid
+# draw object to appear as a solid
+
+#/gate/block/vis/setColor blue
+# define object color
+
+
+
+
+
+
+# W O R L D
+/gate/world/geometry/setXLength 40. cm
+/gate/world/geometry/setYLength 40. cm
+/gate/world/geometry/setZLength 40. cm
+
+/gate/world/daughters/name vol_1
+
+
+
+
+# S Y S T E M
+/gate/world/daughters/name cylindricalPET
+/gate/world/daughters/insert cylinder
+/gate/cylindricalPET/setMaterial Water
+/gate/cylindricalPET/geometry/setRmax 100 mm
+/gate/cylindricalPET/geometry/setRmin 86 mm
+/gate/cylindricalPET/geometry/setHeight 18 mm
+/gate/cylindricalPET/vis/forceWireframe
+

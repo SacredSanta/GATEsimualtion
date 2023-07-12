@@ -1,0 +1,1363 @@
+\documentstyle[11pt]{article}  
+%\documentstyle{article}  
+%\pagestyle{empty}  
+%\parindent = 0pt  
+%\parskip= .20in
+
+\begin{document}
+
+\title{g4.prim format version 2.4\\
+for Fukui Renderer DAWN}
+\author{Satoshi Tanaka}
+\date{February 5, 1998}
+\maketitle
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+This document explains the ``g4.prim format'' which is able to describe  
+visualizable 3D (three-dimensional) scenes   
+transferred from GEANT4 with help of its visualization manager 
+and Fukui Renderer driver (DAWN driver).  
+In the following, we use the term ^^ ^^ 3D data'' meaning  
+a data to construct a 3D scene or a hint information for the construction,
+e.g., shape, color, body-coordinate definition, and bounding box of
+the whole scene.
+On the other hand, the term ^^ ^^ g4.prim-format data'' means  
+a set of 3D data plus several rendering commands to control DAWN.
+
+DAWN receives the g4.prim-format data from GEANT4  
+via the TCP/IP socket of the default port number 40701,  
+or via the named pipe by specifying -G and -g options, respectively:  
+
+\begin{verbatim}
+     % dawn -G     (invoking DAWN with socket mode)
+     % dawn -g     (invoking DAWN with named pipe mode)
+\end{verbatim}
+
+\noindent
+GEANT4 invokes DAWN with -G option by default,  
+and with -g option if the environmental variable  
+``G4DAWN\_NAMED\_PIPE'' is set to 1.  
+How GEANT4 sends the g4.prim-format data to DAWN is demonstrated in 
+the test programs, ``\verb+g4test_inet.cc+'' and ``\verb+g4test_unix.cc+'', 
+included in the DAWN package.
+G4.prim-format data sent from GEANT4 are automatically saved  
+to a file with the name ``g4.prim" in current directory of DAWN.   
+
+G4.prim-format data can also be visualized  
+with the stand alone (off-line) use of DAWN, giving a g4.prim-format file name  
+from a command line as an argument.
+
+\begin{verbatim}
+     % dawn g4.prim-format-filename
+\end{verbatim}
+
+The g4.prim format is designed with the following philosophy:  
+
+\begin{enumerate}
+\item  The format should be suitable to describe 3D data of GEANT4.
+       For this purpose,  
+       (i) it should support most of shapes defined in GEANT4  
+       as built-in primitives, and   
+       (ii) it should be able to describe both the CSG and B-Rep data.  
+\item  Attributes such as color should be described with the way of  
+       state machine in order to avoid repetitive resetting of them.  
+\item The format should be able to describe rendering commands for
+      DAWN as well as 3D data,  
+      but the rendering commands should be clearly distinguishable  
+      from 3D data.  
+\item The format should be suitable for effective data transfer  
+      via local or wide area network. For this purpose,   
+      it should be compact and be able to be translated into VRML format
+      easily.
+\end{enumerate}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{3D Data and rendering commands}   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Each 3D data begins with a character '/' (slash).  
+For example, a $1\times{}1\times{}1$ box is described as:   
+
+\begin{verbatim}
+     /Box  0.5 0.5 0.5
+\end{verbatim}
+
+\noindent
+where the 0.5's are half lengths of edges.
+On the other hand,  
+each rendering command for DAWN begins with a character '!' 
+(exclamation mark).  
+For example,  
+
+\begin{verbatim}
+     !DrawAll
+\end{verbatim}
+\noindent
+is a command to request DAWN to flush drawing.  
+Each 3D data and rendering command need not
+begin at the first column of the line, i.e., 
+indentation is allowed.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Comment lines and blank lines}   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+A Line beginning with a character '\verb+#+' is regarded as a comment line.  
+The character '\verb+#+' must be put at the first column.
+(Indentation of comment lines are not allowed.)
+The first line of the whole data should be a comment line as  
+^^ ^^ \verb+##G4.PRIM-FORMAT-2.4+''. 
+We call this line the ^^ ^^ header-comment line'' below.  
+
+Blank lines are acceptable except for the very first line of the whole date. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Global structure of g4.prim format}   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The g4.prim format consists of three blocks:  
+(1) preamble (2) modeling block, and  
+(3) terminating block
+
+%-----------------------------
+\subsection{Preamble}   
+%-----------------------------
+
+The preamble is of the following form:  
+
+\begin{verbatim}
+##G4.PRIM-FORMAT-2.4
+/BoundingBox  xmin ymin zmin xmax ymax zmax   
+!SetCamera  
+!OpenDevice
+\end{verbatim}
+
+\noindent
+The first line of a g4.prim-format data must be the header-comment line 
+as ^^ ^^ \verb+##G4.PRIM-FORMAT-2.4+''.
+The line, \verb+/BoundingBox ... +  
+defines a bounding box which determines extension of the described 3D scene.  
+Real numbers \verb+xmin+, \verb+ymin+ and \verb+zmin+ are minimum  
+x, y, and z world coordinates of the 3D scene,  
+while \verb+xmax+, \verb+ymax+ and \verb+zmax+ are maximum.  
+DAWN uses this information for automatic camera positioning,  
+automatic drawing of coordinate axes, etc.  
+\vspace{.20in}
+
+\noindent  
+{\bf{}Example:}  
+
+\begin{verbatim}
+##G4.PRIM-FORMAT-2.4
+/BoundingBox -1.0 -2.5 -5.0 1.0 2.5 5.0
+!SetCamera
+!OpenDevice
+\end{verbatim}
+
+%-----------------------------
+\subsection{Modeling block}  
+%-----------------------------
+
+The modeling block begins with a line \ \verb+!BeginModeling+,   
+and ends with a line                  \ \verb+!EndModeling+.
+Three kinds of 3D data are described between them.
+
+\noindent  
+\begin{enumerate}
+\item 3D primitives, i.e, shapes and polylines
+\item Current body coordinates used to locate 3D primitives
+\item Current attributes to be assigned to 3D primitives
+\item Markers to be set to arbitrary 3D positions
+\end{enumerate}
+
+\noindent
+The available 3D primitives, attributes, and markers  
+are listed later together with a detailed description of  
+their formats.
+
+The current body coordinates are defined by the following two 
+lines:
+
+\begin{verbatim}
+/Origin      Ox  Oy  Oz
+/BaseVector  e1.x  e1.y  e1.z  e2.x  e2.y  e2.z  
+\end{verbatim}
+
+\noindent
+where (\verb+Ox+, \verb+Oy+, \verb+Oz+) is the origin of   
+the current body coordinates.  
+Orientation of the current body coordinates is defined with  
+a set of base vectors, i.e.,  
+x-directional base vector (\verb+e1.x+, \verb+e1.y+, \verb+e1.z+)  
+and y-directional base vector (\verb+e2.x+, \verb+e2.y+, \verb+e2.z+).
+Z-directional base vector is defined as  
+(\verb+e1.x+, \verb+e1.y+, \verb+e1.z+) $\times$  
+(\verb+e2.x+, \verb+e2.y+, \verb+e2.z+).  
+The base vectors need not be normalized.  
+The origin and the base vectors are expressed in terms of the world
+coordinates.  
+(There is no concept of hierarchical coordinate transformation.)
+The default current body coordinates, which need not be
+explicitly described are:
+
+\begin{verbatim}
+/Origin      0.0 0.0 0.0  
+/BaseVector  1.0 0.0 0.0  0.0 1.0 0.0   
+\end{verbatim}
+
+\noindent 
+In other words, the default current body coordinates are identical 
+with the world coordinates.
+
+Attributes are able to be assigned to 3D primitives.  
+The most important one is color: \verb+/ColorRGB R G B+.
+For example, a red box is described by putting a line
+\verb+/ColorRGB 1.0 0.0 0.0+ before a line \verb+/Box ...+.  
+Each of R (red), G (green), and B (blue) components of color  
+should take a value between 0 and 1.  
+The default color which need not be explicitly  
+described is white, which is equivalent to \verb+/ColorRGB 1.0 1.0 1.0+.  
+Once current body coordinates or current attributes are set,  
+they remain effective until   
+they are explicitly described later again with other values.
+\vspace{.20in}
+
+\noindent  
+{\bf{}Example: Red $1\times{}4\times{}9$ box centered at position (1, 2, 3)}
+
+\begin{verbatim}
+!BeginModeling
+/Origin   1  2  3  
+/ColorRGB 1  0  0  
+/Box 0.5   2.0   4.5  
+!EndModeling
+\end{verbatim}
+
+
+%-----------------------------
+\subsection{Terminating block}
+%-----------------------------
+The terminating block describes a few rendering commands as follows.
+
+\begin{verbatim}
+!DrawAll
+!CloseDevice
+\end{verbatim}
+
+\noindent
+These commands request DAWN to flush drawing and close the current  
+visualizing device.
+
+%-----------------------------
+\subsection{A Real example of complete visualizable file}
+%-----------------------------
+
+The following is a visualizable example of a   
+red $1\times{}4\times{}9$ box centered at position   
+(1,2,3) of the world coordinate.
+
+\begin{verbatim}
+##G4.PRIM-FORMAT-2.4
+#####################################
+# Red 1x4x9 box centered at (1,2,3) #
+#####################################
+/BoundingBox  0.5  0.0  -1.5   1.5   4.0   7.5
+!SetCamera
+!OpenDevice
+!BeginModeling
+/Origin   1.0  2.0  3.0
+/ColorRGB 1.0  0.0  0.0  
+/Box 0.5   2.0   4.5  
+!EndModeling
+!DrawAll
+!CloseDevice  
+\end{verbatim}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Formats of 3D primitives}  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+In this section, we explain formats of available 3D primitives,  
+i.e., shapes and polylines, one by one.
+Note that current body coordinates are used in the description.
+For example, the x-axis means the one in the current body coordinates.
+All angles are described in units of radians.
+
+
+%------------------
+\subsection{/Box}
+%------------------
+
+\verb+/Box+ describes a box with edges parallel to the x, y, and z axes.
+Its center locates at the origin.
+\verb+/Box+ corresponds to class G4Box of GEANT4.
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%---------------------------------------
+Format & \verb+/Box dx  dy  dz+\\
+\hline%---------------------------------------
+\verb+dx+     & half length of x-directional edges\\
+\hline%---------------------------------------
+\verb+dy+     & half length of y-directional edges\\
+\hline%---------------------------------------
+\verb+dz+     & half length of z-directional edges\\
+\hline%---------------------------------------
+\end{tabular}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%------------------
+%\subsection{/Brep \ldots\ \ /EndBrep}  
+%%------------------
+%\verb+/Brep+ \ldots{} \verb+/EndBrep+ describes a general polyhedron  
+%composed of a set of 3D polygons.  
+%It is equivalent to \verb+/Polyhedron+ \ldots{} \verb+/EndPolyhedron+,
+%but its format is different.
+%It is recommended to use \verb+/Polyhedron+ \ldots{} \verb+/EndPolyhedron+.
+%Concave polygons are available but not recommended.  
+%Lists of vertices and
+%facets are described between \verb+/Brep+ and \verb+/EndBrep+.  
+%The following is the format for a polyhedron with  
+%$N$ vertices and $M$ facets.
+%\vspace{.20in}
+%
+%\begin{tabular}{|c|l|}
+%\hline%---------------------------------------
+%Format & \verb+/Brep+\\
+%       & \verb+BeginVertex+\\
+%       & \verb+v1  x1 y1 z1+\\
+%       & \verb+v2  x2 y2 z2+\\
+%       & \ldots\ldots    \\
+%       & \verb+vN  xN yN zN+\\
+%       & \verb+EndVertex+\\
+%       & \verb+BeginFacet+\\
+%       & \verb+f1_v1 f1_v2 f1_v3 +\ldots{};\\
+%       & \verb+f2_v1 f2_v2 f2_v3 +\ldots{};\\
+%       & \ldots\ldots    \\
+%       & \verb+fM_v1 fM_v2 fM_v3 +\ldots{};\\
+%       & \verb+EndFacet+\\
+%       & \verb+/EndBrep+\\
+%\hline%----------------------------------------------------
+%\verb+BeginVertex ... EndVertex+  & sub-block to describe vertex positions\\
+%\hline%----------------------------------------------------
+%\verb+vi+   & integer vertex label of the i-th vertex\\
+%            & of the polyhedron ($1 \leq \verb+i+ \leq N$) \\
+%\hline%----------------------------------------------------
+%\verb+(xi, yi, zi)+ & 3D position of the i-th vertex \\
+%                    & of the polyhedron ($1 \leq \verb+i+ \leq N$) \\
+%\hline%----------------------------------------------------
+%\verb+BeginFacet ... EndFacet+  & sub-block to describe facets\\
+%\hline%----------------------------------------------------
+%\verb+fa_vj+         & the j-th vertex label of the a-th facet, \\
+%                     & whose absolute value must coincide with \\
+%		     & one of the vertex labels  
+%		       \{\verb+v1+, \verb+v2+, \ldots, \verb+vN+\}\\
+%\hline%----------------------------------------------------
+%\verb+fa_v1 fa_v2 fa_v3 ... ;+ & the a-th facet expressed by connecting \\
+%                   & vertex labels in counter-clock-wise order\\
+%                   & viewing from its front side.\\
+%                   & Edge \verb+fa_vi+---\verb+fa_vj+ is regarded as \\
+%                   & an invisible edge if \verb+fa_vj+ is negative. \\
+%		   & At least three vertices must be described.\\
+%\hline%----------------------------------------------------
+%\end{tabular}
+%\vspace{.20in}
+%
+%The following is a sample description of a   
+%red $1\times{}4\times{}9$ box.   
+%\vspace{.20in}
+%
+%\noindent  
+%{\bf{}Example: 1$\times{}4\times{}9$ box}
+%
+%\begin{verbatim}
+%##G4.PRIM-FORMAT-2.4
+%######################################
+%# 1x4x9 box with /Brep ... /EndBrep ##
+%######################################
+%
+%/Brep
+%BeginVertex
+%1 -0.500000000 -2.000000000 -4.500000000
+%2 0.500000000 -2.000000000 -4.500000000
+%3 -0.500000000 2.000000000 -4.500000000
+%4 0.500000000 2.000000000 -4.500000000
+%5 -0.500000000 -2.000000000 4.500000000
+%6 0.500000000 -2.000000000 4.500000000
+%7 -0.500000000 2.000000000 4.500000000
+%8 0.500000000 2.000000000 4.500000000
+%EndVertex
+%BeginFacet
+%3 4 2 1 ;
+%1 2 6 5 ;
+%2 4 8 6 ;
+%4 3 7 8 ;
+%3 1 5 7 ;
+%5 6 8 7 ;
+%EndFacet
+%/EndBrep
+%\end{verbatim}
+%
+%
+%An invisible edge is expressed by assigning a negative 
+%integer vertex label to its ending point.
+%For example, ``1 -2 6 5 ;'' describes a facet
+%1$\rightarrow$2$\rightarrow$6$\rightarrow$5$\rightarrow$1,
+%in which the edge connecting vertices 1 and 2 is invisible.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%------------------
+\subsection{/Column}
+%------------------
+\verb+/Column+ describes a solid cylinder.  
+Its height extends along the z axis.
+The     top    circle is on plane z = +dz,   
+and the bottom circle    on plane z = -dz.
+Centers of the top and bottom circles are   
+(0, 0, +dz) and  (0, 0, -dz), respectively.
+\verb+/Column+ is equivalent to \verb+/Tubs+   
+with full azimuthal angle ($2\pi$) and zero minimum radius.  
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%---------------------------------------
+Format & \verb+/Column  r dz +\\
+\hline%---------------------------------------
+\verb+r+   & radius of the top and bottom circles\\
+\hline%---------------------------------------
+\verb+dz+  & half height along the z axis\\
+\hline%---------------------------------------
+\end{tabular}
+
+
+%------------------
+\subsection{/Cons}
+%------------------
+\verb+/Cons+ describes a tube or its segment in azimuthal angle  
+with varying minimum (inside) and maximum (outside) radii.
+It is a cone (segment) with its upper part cut away.
+Its height extends along the z axis.
+The     top    facet is on plane z = +dz,   
+and the bottom facet    on plane z = -dz.
+Centers of the top and bottom facets are   
+(0, 0, +dz) and  (0, 0, -dz), respectively.
+\verb+/Cons+ corresponds to class G4Cons of GEANT4.
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%---------------------------------------
+Format & \verb+/Cons rmin1 rmax1 rmin2 rmax2 dz sphi dphi+\\
+\hline%---------------------------------------
+\verb+rmin1+  & minimum (inside) radius at z = -\verb+dz+\\
+\hline%---------------------------------------
+\verb+rmax1+  & maximum (outside) radius at z = -\verb+dz+\\
+\hline%---------------------------------------
+\verb+rmin2+  & minimum (inside)  radius at z = +\verb+dz+\\
+\hline%---------------------------------------
+\verb+rmax2+  & maximum (outside) radius at z = +\verb+dz+\\
+\hline%---------------------------------------
+\verb+dz+     & half height along the z axis\\
+\hline%---------------------------------------
+\verb+sphi+  &  starting azimuthal angle, $[-2\pi, +2\pi]$ \\
+\hline%---------------------------------------
+\verb+dphi+  &  extension of azimuthal angle, \verb+dphi+ = $[0, 2\pi]$, \\
+             &  \verb+sphi+ + \verb+dphi+ = $[-2\pi, +2\pi$] \\
+\hline%---------------------------------------
+\end{tabular}
+
+
+%----------------------------
+\subsection{/Parallelepiped}  
+%----------------------------
+\verb+/Parallelepiped+ describes a parallelepiped,  
+which is the following skewed box.
+\begin{enumerate}
+\item The top and bottom facets are identical parallelograms.
+\item The top parallelogram is on plane     z = +dz  
+      and the bottom parallelogram on plane z = -dz.
+\item The center locates at the origin.
+\item A line joining the centers of the top and bottom parallelograms is
+      skewed by angles $\theta$ (polar angle) and $\phi$ (azimuthal angle).
+\item Two edges of the top (or bottom) parallelogram are parallel  
+      to the x axis.   
+      Their length is $2\times$ \verb+dx+, and
+      distance between them, i.e., height of the parallelogram,  
+      is $2\times$ \verb+dy+.
+\item The top (or bottom) parallelogram skews by angle $\alpha$ in the   
+      x direction.
+      That is, $\alpha$ is the angle formed the y axis and
+      a line joining middle points of the two x-directional edges   
+      mentioned above.
+\end{enumerate}
+\verb+/Parallelepiped+ corresponds to class G4Para of GEANT4.
+\vspace{.20in}
+
+
+\begin{tabular}{|c|l|}
+\hline%---------------------------------------
+Format & \verb+/Parallelepiped  dx dy dz+ \\
+       & \verb+                 tanAlpha+\\
+       & \verb+                 tanTheta_cosPhi+\\
+       & \verb+                 tanTheta_sinPhi+\\
+\hline%---------------------------------------
+\verb+dx+     & half length of edges parallel to the x axis\\
+\hline%---------------------------------------
+\verb+dy+     & half height of the top and bottom parallelograms\\
+              & along the y axis \\
+\hline%---------------------------------------
+\verb+dz+     & half height of this parallelepiped along the z axis\\
+\hline%---------------------------------------
+\verb+tanAlpha+  & $\tan(\alpha)$\\
+                 & \ \ $\alpha$: angle expressing skew of the top and bottom\\   
+                 & \ \ parallelograms in the x direction.\\
+\hline%---------------------------------------
+\verb+tanTheta_cosPhi+  &  $\tan(\theta)\times\cos(\phi)$ \\
+                   & \ \ Polar angle $\theta$ and azimuthal angle $\phi$\\
+		   & \ \ describes skewness of the line joining centers\\
+                   & \ \ of the top and bottom parallelograms\\
+\hline%---------------------------------------
+\verb+tanTheta_sinPhi+  &  $\tan(\theta)\times\sin(\phi)$\\
+\hline%---------------------------------------
+\end{tabular}
+
+
+%----------------------------
+\subsection{/PolyCone}  
+%----------------------------
+\verb+/PolyCone+ describes a rotational body around the z axis.
+The shape of \mbox{\verb+/PolyCone+} is piled-up \verb+/Cons+'s  
+in the z direction.
+\verb+/PolyCone+ corresponds to class G4BREPSolidPCone of GEANT4.
+But \verb+/PolyCone+ is not really used in GEANT4 visualization.
+\verb+/Polyhedron ... /EndPolyhedron+ is used instead.   
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%---------------------------------------
+Format & \verb+/PolyCone  sphi  dphi  nz           + \\
+       & \verb+           z[nz]  rmin[nz]  rmax[nz]+ \\
+       & (A[n] abbreviates a list of n real numbers) \\
+\hline%---------------------------------------
+\verb+sphi+  & starting azimuthal angle, $[-2\pi, +2\pi$] \\
+\hline%---------------------------------------
+\verb+dphi+  &  extension of azimuthal angle, \verb+dphi+ = $[0, 2\pi]$\\
+             &  and \verb+sphi+ + \verb+dphi+ = $[-2\pi, +2\pi$] \\
+\hline%---------------------------------------
+\verb+nz+ & number of given z coordinates to define piled-up
+            \verb+/Cons+'s:\\
+          & \verb+nz+ is equal to the number of the piled-up
+	    \verb+/Cons+'s\\
+	  & plus one.\\
+\hline%---------------------------------------
+\verb+z[i]+  & z coordinate of the top plane of the i-th \verb+/Cons+.\\  
+             & The \verb+z[0]+ defines the bottom plane of the whole shape. \\
+             & i = 0,1,2, ..., \verb+nz+ -1.\\
+\hline%---------------------------------------
+\verb+rmin[i]+  & minimum (inside)  radius at z = z[i] \\
+\hline%---------------------------------------
+\verb+rmax[i]+  & maximum (outside) radius at z = z[i] \\
+\hline%---------------------------------------
+\end{tabular}
+
+
+%----------------------------
+\subsection{/PolyGon}  
+%----------------------------
+\verb+/PolyGon+ is similar to \verb+/PolyCone+.
+The difference is that its side is not a curved surface, but 
+its side is really a set of explicitly given numbers of 3D polygons. 
+\verb+/PolyGon+ corresponds to class G4BREPSolidPolyhedra of GEANT4.
+But \verb+/PolyGon+ is not really used in GEANT4 visualization.   
+\verb+/Polyhedron ... /EndPolyhedron+ is used instead.   
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%---------------------------------------
+Format & \verb+/PolyGon   sphi  dphi  nsides  nz+ \\
+       & \verb+           z[nz]  rmin[nz]  rmax[nz]+ \\
+       & (A[n] abbreviates a list of n real numbers) \\
+\hline%---------------------------------------
+\verb+nsides+   & accuracy of expressing curved side surfaces\\
+\hline%---------------------------------------
+others & same as \verb+/PolyCone+ \\
+\hline%---------------------------------------
+\end{tabular}
+
+%-------------------------------------------
+\subsection{/Polyhedron \ldots\ \ /EndPolyhedron}  
+%--------------------------------------------
+
+\verb+/Polyhedron+ \ldots{} \verb+/EndPolyhedron+
+describes a general polyhedron composed of a set of 3D polygons.  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%It is equivalent to \verb+/Brep+ \ldots{} \verb+/EndBrep+,
+%but its format is different.
+%It is recommended to use \verb+/Polyhedron+ \ldots{} \verb+/EndPolyhedron+.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Concave polygons are available but not recommended.  
+Lists of vertices and
+facets are described between \verb+/Polyhedron+ and \verb+/EndPolyhedron+.  
+The following is the format for a polyhedron with  
+$N$ vertices and $M$ facets.
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%---------------------------------------
+Format & \verb+/Polyhedron+\\
+       & \verb+/Vertex  x1 y1 z1+\\
+       & \verb+/Vertex  x2 y2 z2+\\
+       & \ldots\ldots    \\
+       & \verb+/Vertex  xN yN zN+\\
+       & \verb+/Facet  f1_v1 f1_v2 f1_v3 +\ldots{}\\
+       & \verb+/Facet  f2_v1 f2_v2 f2_v3 +\ldots{}\\
+       & \ldots\ldots    \\
+       & \verb+/Facet  fM_v1 fM_v2 fM_v3 +\ldots{}\\
+       & \verb+/EndPolyhedron+\\
+\hline%----------------------------------------------------
+\verb+(xi, yi, zi)+ & 3D position of the i-th vertex \\
+                    & of the polyhedron ($1 \leq \verb+i+ \leq N$). \\
+                    & The integer label ^^ i'' is assigned to \\
+		    & vertices incrementally, beginning from 1.\\
+\hline%----------------------------------------------------
+\verb+fa_vj+         & the j-th vertex label of the a-th facet, \\
+                     & whose absolute value must coincide with \\
+		     & one of the vertex labels  
+		       \{$1, 2, 3, \ldots, N$\}.\\
+\hline%----------------------------------------------------
+\verb+fa_v1 fa_v2 fa_v3 ... + & the a-th facet expressed by connecting \\
+                   & vertex labels in counter-clock-wise order\\
+                   & viewing from its front side.\\
+                   & Edge \verb+fa_vi+---\verb+fa_vj+ is regarded as \\
+                   & an invisible edge if \verb+fa_vj+ is negative. \\
+		   & At least three vertices must be described.\\
+\hline%----------------------------------------------------
+\end{tabular}
+\vspace{.20in}
+
+
+Note that positive-integer labels are incrementally and automatically
+assinged to vertices given by  \verb+/Vertex  ...+,   
+beginning from 1, not 0.
+
+An invisible edge is expressed by assigning a negative 
+integer vertex label to its ending point.
+For example, ``/Facet 1 -2 6 5 ;'' describes a facet
+1$\rightarrow$2$\rightarrow$6$\rightarrow$5$\rightarrow$1,
+in which the edge connecting vertices 1 and 2 is invisible.
+
+Vertex data (\verb+/Vertex ...+) and facet data (\verb+/Facet  ...+)
+can be described at any position with any order
+between \verb+/Polyhedron+ \ldots{} \verb+/EndPolyhedron+, 
+but it is recommended that all vertex data are described beforehand.  
+
+The following is a sample description of a   
+red $1\times{}4\times{}9$ box using
+\verb+/Polyhedron+ \ldots{}\verb+/EndPolyhedron+. 
+\vspace{.20in}
+
+\noindent  
+{\bf{}Example: 1$\times{}4\times{}9$ box}
+
+\begin{verbatim}
+##G4.PRIM-FORMAT-2.4
+##################################################
+# 1x4x9 box with /polyhedron ... /EndPolyhedron ##
+##################################################
+
+/BoundingBox -0.5 -2.0 -4.5  0.5  2.0  4.5
+!SetCamera
+!OpenDevice 
+!BeginModeling
+
+/ColorRGB  1.0 0.0 0.0
+
+/Polyhedron
+/Vertex -0.500000000 -2.000000000 -4.500000000
+/Vertex  0.500000000 -2.000000000 -4.500000000
+/Vertex -0.500000000 2.000000000 -4.500000000
+/Vertex  0.500000000 2.000000000 -4.500000000
+/Vertex -0.500000000 -2.000000000 4.500000000
+/Vertex  0.500000000 -2.000000000 4.500000000
+/Vertex -0.500000000 2.000000000 4.500000000
+/Vertex  0.500000000 2.000000000 4.500000000
+/Facet 3 4 2 1 
+/Facet 1 2 6 5 
+/Facet 2 4 8 6 
+/Facet 4 3 7 8 
+/Facet 3 1 5 7 
+/Facet 5 6 8 7 
+/EndPolyhedron
+
+
+!EndModeling
+!DrawAll 
+!CloseDevice 
+\end{verbatim}
+
+
+
+%-------------------------------------------
+\subsection{/Polyline \ldots\ \ /EndPolyline}  
+%--------------------------------------------
+\verb+/Polyline ... /EndPolyline+ describes a polyline, i.e.,  
+a set of successive line segments.  
+A List of vertices is described between
+\verb+/Polyline+ and \verb+/EndPolyline+.
+The following is the format of describing a polyline with
+$N$ vertices, i.e., $N-1$ line segments.
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%---------------------------------------
+Format & \verb+/Polyline+\\
+       & \verb+/PLVertex x1 y1 z1+\\
+       & \verb+/PLVertex x2 y2 z2+\\
+       & \ldots\ldots    \\
+       & \verb+/PLVertex xN yN zN+\\
+       & \verb+/EndPolyline+\\
+\hline%----------------------------------------------------
+\verb+(xi, yi, zi)+ &  the i-th vertex position\\
+\hline%----------------------------------------------------
+\end{tabular}
+\vspace{.20in}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%The key word \verb+/PLVertex+ can be replaced with \verb+PLVertex+ 
+%without the first letter ^^ /', though it is not recommended.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%------------------
+\subsection{/Sphere}  
+%------------------
+\verb+/Sphere+ describes a sphere.
+Its center locates at the origin.   
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%----------------------
+Format & \verb+/Sphere  r+\\
+\hline%----------------------
+\verb+r+      & radius\\
+\hline%----------------------
+\end{tabular}
+
+
+%------------------
+\subsection{/SphereSeg}  
+%------------------
+\verb+/SphereSeg+ describes a sphere segment in polar and/or azimuthal angles.  
+It corresponds to class G4Sphere of GEANT4.
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%---------------------------------------
+Format & \verb+/SphereSeg  rmin rmax stheta dtheta sphi dphi+\\
+\hline%---------------------------------------
+\verb+rmin+  & minimum (inside)  radius \\
+\hline%---------------------------------------
+\verb+rmax+  & maximum (outside) radius \\
+\hline%---------------------------------------
+\verb+stheta+  & starting polar angle, $[0, \pi$] \\
+\hline%---------------------------------------
+\verb+dtheta+  &  extension of polar angle, \verb+dtheta+ = $[0, \pi]$\\
+               &  and \verb+stheta+ + \verb+dtheta+ = $[0, \pi$] \\
+\hline%---------------------------------------
+\verb+sphi+  & starting azimuthal angle, $[-2\pi, +2\pi$] \\
+\hline%---------------------------------------
+\verb+dphi+  &  extension of azimuthal angle, \verb+dphi+ = $[0, 2\pi]$\\
+             &  and \verb+sphi+ + \verb+dphi+ = $[-2\pi, +2\pi$] \\
+\hline%---------------------------------------
+\end{tabular}
+
+%------------------
+\subsection{/Torus}
+%------------------
+\verb+/Torus+ describes a torus or its segment in azimuthal angle
+around the z axis.
+The curbed tube to form the torus has 
+a constant minimum inside radius (rmin) and a maximum outside radius (rmax).
+The circle drawn by the central line of the tube has a radius rtor,
+and center of this circle is the coordinate origin.
+\verb+/Torus+ corresponds to class G4Torus of GEANT4.
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%---------------------------------------
+Format & \verb+/Torus rmin rmax rtor sphi dphi+\\
+\hline%---------------------------------------
+\verb+rmin+  & minimum (inside)  radius of tube \\
+\hline%---------------------------------------
+\verb+rmax+  & maximum (outside) radius of tube \\
+\hline%---------------------------------------
+\verb+rtor+  & radius of circle drawn by the central line of the tube\\
+\hline%---------------------------------------
+\verb+sphi+ & starting azimuthal angle of the above circle, \\
+            & \verb+sphi+ = $[-2\pi, +2\pi$]\\
+\hline%---------------------------------------
+\verb+dphi+ & extension of azimuthal angle of the above circle,\\
+	    & \verb+dphi+ = $[0, 2\pi]$,\\
+            &  \verb+sphi+ + \verb+dphi+ = $[-2\pi, +2\pi$] \\
+\hline%---------------------------------------
+\end{tabular}
+
+
+%------------------
+\subsection{/Trap}
+%------------------
+\verb+/Trap+ is a skewed version of \verb+/Trd+, i.e.,   
+asymmetric pyramid with its upper part cut away.
+Its top and bottom facets are asymmetric trapezoids.   
+Its skew is expressed with direction of   
+a line joining the centers of the top and bottom trapezoids.  
+(Here we define a center of a trapezoid  by an intersection   
+point of two lines passing through middle points of opponent edges.)\ \   
+This line should pass through the origin.
+The     top    trapezoid is on plane z = +dz,   
+and the bottom trapezoid    on plane z = -dz.
+Note that there are 11 parameters, but only 9 are really independent.
+Meanings of some parameters are similar to those of \verb+/Parallelepiped+.
+\verb+/Trap+ corresponds to class G4Trap of GEANT4.
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%---------------------------------------
+Format & \verb+/Trap dz theta phi h1 bl1 tl1 alpha1+ \\
+       & \verb+                   h2 bl2 tl2 alpha2+ \\
+\hline%---------------------------------------
+\verb+dz+     & half height of this shape along the z axis \\
+\hline%---------------------------------------
+\verb+theta+  & polar angle of the line expressing skew \\
+\hline%---------------------------------------
+\verb+phi+    & azimuthal angle of the line expressing skew \\
+\hline%---------------------------------------
+\verb+h1+     & half height of the bottom trapezoid along the y axis \\
+\hline%---------------------------------------
+\verb+bl1+    & half length along the x direction of the side at \\
+              & minumum y of the bottom trapezoid\\
+\hline%---------------------------------------
+\verb+tl1+    & half length along the x direction of the side at \\
+              & maximum y of the bottom trapezoid \\
+\hline%---------------------------------------
+\verb+alpha1+ & angle formed the y axis and a line joining middle points \\
+              & of the two x-directional edges of the bottom trapezoid \\
+\hline%---------------------------------------
+\verb+h2+     & half height of the top trapezoid along the y axis \\
+\hline%---------------------------------------
+\verb+bl2+    & half length along the x direction of the side at \\
+              & minimum y of the top trapezoid \\
+\hline%---------------------------------------
+\verb+tl2+    & half length along the x direction of the side at \\
+              & maximum y of the top trapezoid \\
+\hline%---------------------------------------
+\verb+alpha2+ & angle formed the y axis and a line joining middle points \\
+              & of the two x-directional edges of the bottom trapezoid\\
+\hline%---------------------------------------
+\end{tabular}
+
+
+%------------------
+\subsection{/Trd}
+%------------------
+\verb+/Trd+ describes a symmetric pyramid with its upper part cut away.
+Its properties are:
+
+\begin{enumerate}
+\item The top and bottom facets are rectangles with, in general, different sizes.
+\item Two edges of the top (or bottom) rectangles   
+      are parallel to the x axis, and   
+      the other two edges are parallel to the y axis.
+\item The     top    rectangle is  on plane  z = +dz,  
+      and the bottom rectangle     on plane  z = -dz.
+\item Centers of the top and bottom rectangles are   
+      (0, 0, +dz) and  (0, 0, -dz), respectively.
+\end{enumerate}
+\verb+/Trd+ corresponds to class G4Trd of GEANT4.
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%---------------------------------------
+Format & \verb+/Trd  dx1 dx2 dy1 dy2 dz+\\
+\hline%---------------------------------------
+\verb+dx1+    & half length of x-parallel edges at z = -dz\\
+\hline%---------------------------------------
+\verb+dx2+    & half length of x-parallel edges at z = +dz\\
+\hline%---------------------------------------
+\verb+dy1+    & half length of y-parallel edges at z = -dz\\
+\hline%---------------------------------------
+\verb+dy2+    & half length of y-parallel edges at z = +dz\\
+\hline%---------------------------------------
+\verb+dz+     & half height along the z axis \\
+\hline%---------------------------------------
+\end{tabular}
+
+
+%------------------
+\subsection{/Tubs}
+%------------------
+\verb+/Tubs+ describes a tube or its segment in azimuthal angle  
+with constant minimum (inside) and maximum (outside) radii.
+Its height extends along the z axis.
+The     top    facet is on plane z = +dz,   
+and the bottom facet    on plane z = -dz.
+Centers of the top and bottom facets are   
+(0, 0, +dz) and  (0, 0, -dz), respectively.
+\verb+/Tubs+ is equivalent to \verb+/Cons+    
+with \verb+rmin1+ = \verb+rmin2+ and \verb+rmax1+ = \verb+rmax2+.
+\verb+/Tubs+ corresponds to class G4Tubs of GEANT4.
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%---------------------------------------
+Format & \verb+/Tubs rmin rmax dz sphi dphi+\\
+\hline%---------------------------------------
+\verb+rmin+  & minimum (inside)  radius \\
+\hline%---------------------------------------
+\verb+rmax+  & maximum (outside) radius \\
+\hline%---------------------------------------
+\verb+dz+    & half height along the z axis\\
+\hline%---------------------------------------
+\verb+sphi+  & starting azimuthal angle, $[-2\pi, +2\pi$] \\
+\hline%---------------------------------------
+\verb+dphi+  &  extension of azimuthal angle, \verb+dphi+ = $[0, 2\pi]$, \\
+             &  \verb+sphi+ + \verb+dphi+ = $[-2\pi, +2\pi$] \\
+\hline%---------------------------------------
+\end{tabular}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Formats of attributes}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+This section describes the formats of available attributes.
+Each attribute has an current value,  
+which is assigned to described 3D primitives automatically.  
+
+%---------------------
+\subsection{/ColorRGB}  
+%---------------------
+\verb+/ColorRGB+ describes current color.  
+For 3D shapes such as \verb+/Box+,  
+it is used as a set of diffusion reflection coefficients.  
+For polylines, it is regarded as their color directly.
+By default, \verb+/ColorRGB 1.0 1.0 1.0+ is set implicitly. 
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%---------------------------------------
+Format & \verb+/ColorRGB  R  G  B+\\
+\hline%---------------------------------------
+(R, G, B) & red, green, and blue components of color. \\
+          & R, G, B = [0,1] \\
+\hline%---------------------------------------
+\end{tabular}
+
+
+%----------------------------
+\subsection{/FontName}  
+%----------------------------
+\verb+/FontName+ sets a current font used by 
+\verb+/MarkText2D+ and \verb+/MarkText2DS+, and \verb+/Text2DS+. 
+Its argument should coincide with one of a font name supported by 
+a PostScript driver used for printing.
+Greek letters are also available by setting the argument to "Symbol".
+By default, \verb+/FontName Times-Roman+ is set implicitly. 
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%---------------------------------------
+Format     & \verb+/FontName  fontname+\\
+\hline%---------------------------------------
+fontname   &  string to specify font name \\
+           &  (e.g. Times-Roman, Courier, Symbol) \\
+\hline%---------------------------------------
+\end{tabular}
+
+
+
+%-------------------------
+\subsection{/ForceWireframe}  
+%-------------------------
+\verb+/ForceWireframe+ is a boolean flag, which describes current 
+forcible wireframe mode.
+Its value is either 0 or 1.
+If it is set to 1, 3D shapes are visualized with 
+wireframe style forcibly.
+If it is set to 0, 3D shapes are visualized according to 
+a drawing style given on the GUI panel of DAWN.
+By default, \verb+/ForceWireframe 0+ is set implicitly. 
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%----------------------------------------
+Format     & \verb+/ForceWireframe  flag+\\
+\hline%----------------------------------------
+\verb+flag+       & 1: forcible wireframe mode is made active\\
+                  & 0: forcible wireframe mode is made inactive \\
+\hline%----------------------------------------
+\end{tabular}
+\vspace{.20in}
+
+\verb+/ForceWireframe+ is often used to make a shape look transparent. 
+For example, the following lines described in the modeling block 
+displays a green opaque sphere put in a red transparent box:
+\begin{verbatim}
+### green opaque sphere (inside)
+/ColorRGB 0.0  1.0  0.0 
+/ForceWireframe 0
+/Sphere     1.0
+### red transparent box (outside)
+/ColorRGB 1.0  0.0  0.0 
+/ForceWireframe 1
+/Box 1.1  1.1 1.1
+\end{verbatim}
+\vspace{.20in}
+
+\noindent
+DAWN does not support a way of expressing 
+half-transparent features of shapes.  
+
+
+%------------------
+\subsection{/Ndiv}  
+%------------------
+\verb+/Ndiv+ describes current accuracy in approximating a curved surface
+with a set of polygons.
+For \verb+/Column+, \verb+/Cons+, \verb+/PolyCone+, \verb+/PolyGon+,   
+and \verb+/Tubs+,  
+each of their side surfaces is expressed with \verb+/Ndiv+ small rectangles.  
+For \verb+/Sphere+, its surface is expressed with  
+$2\times$ \verb+/Ndiv+ $\times$ \verb+/Ndiv+ small rectangles or triangles.
+By default, \verb+/Ndiv 24+ is set implicitly. 
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%----------------------------------------
+Format     & \verb+/Ndiv  n+\\
+\hline%----------------------------------------
+\verb+n+   & accuracy of approximating curved surfaces, n $\geq 3$\\
+\hline%----------------------------------------
+\end{tabular}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%-------------------------
+%\subsection{/Transparency}  
+%%-------------------------
+%\verb+/Transparency+ is a boolean flag to describe  
+%transparency or opaqueness of 3D shapes.
+%Its value is either 0 or 1.
+%Note that DAWN draws transparent shapes with
+%the forced wireframe style.  
+%Therefore \verb+/Transparency+  is equivalent to 
+%\verb+/Forcewireframe+.
+%\vspace{.20in}
+%
+%\begin{tabular}{|c|l|}
+%\hline%----------------------------------------
+%Format     & \verb+/Transparency  flag+\\
+%\hline%----------------------------------------
+%\verb+flag+       & 1: transparent\\
+%                  & 0: opaque \\
+%\hline%----------------------------------------
+%\end{tabular}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Formats of markers}  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Visible markers can be set to arbitrary 3D positions.  
+They correspond to classes inherited from G4VMarker in GEANT4. 
+The ending string ^^ ^^ 2D'' or ^^ ^^ 2DS''  of each marker name,
+e.g. \mbox{\verb+/MarkSquare2D+} and \mbox{\verb+/MarkSquare2DS+},
+means that every marker always shows its front face towards the view point,
+and so, for example, a marker \verb+/MarkSquare2D+  always looks
+as right square.
+The marked 3D positions are expressed with the current body coordinates.  
+Colors are decided by the current color attribute.
+As for marker size, there are some points to be well understood in use:
+\begin{enumerate}
+\item A unit of marker size is either the real 3D-world unit
+      or the 2D unit on screen:
+	\begin{enumerate}      
+	\item Size of a marker whose name ends with character ^^ S', e.g.\\
+	      \verb+/MarkCircle2DS+, 
+	      is described with the 2D unit on screen. 
+	\item  Size of a marker whose name does not end with character ^^ S', 
+	       e.g. \verb+/MarkCircle2D+ is described with the 3D unit.
+	\end{enumerate}
+\item The 2D unit is recognized as ^^ ^^ pixel'' on computer displays
+      and ^^ ^^ pt'' \mbox{(1[pt]= (25.4/72)mm)} on printed out papers.
+\item For \verb+/MarkText2D+ and \verb+/MarkText2DS+, their marker  sizes
+      mean font sizes. 
+\end{enumerate}
+Note that in GEANT4 sizes of markers are given as diameters, 
+while in g4.prim-format data they are given as radii.  
+
+An important feature of markers is that they are always
+drawn at the end of visualization, such that they can always
+become visible. In other words,
+hidden surface elimination is not applied to markers.
+
+
+
+%----------------------------
+\subsection{/MarkCircle2D}
+%----------------------------
+\verb+/MarkCircle2D+ describes a marker of a two-dimensional circle
+put in the 3D world.
+\verb+/MarkCircle2D+ corresponds to class G4Circle of GEANT4 with
+its size given as world-coordinate size.
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%---------------------------------------
+Format     & \verb+/MarkCircle2D  x y z  r+\\
+\hline%---------------------------------------
+(x, y, z)  &  marked 3D position\\
+\hline%---------------------------------------
+r          &  marker size (3D unit): radius of the circle  \\
+\hline%---------------------------------------
+\end{tabular}
+
+
+%----------------------------
+\subsection{/MarkCircle2DS}
+%----------------------------
+\verb+/MarkCircle2DS+ describes a marker of a two-dimensional circle
+put in the 3D world.
+\verb+/MarkCircle2DS+ corresponds to class G4Circle of GEANT4 with
+its size given as screen size.
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%---------------------------------------
+Format     & \verb+/MarkCircle2DS  x y z  r+\\
+\hline%---------------------------------------
+(x, y, z)  &  marked 3D position\\
+\hline%---------------------------------------
+r          &  marker size (2D unit): radius of the circle     \\
+\hline%---------------------------------------
+\end{tabular}
+
+%----------------------------
+\subsection{/MarkSquare2D}  
+%----------------------------
+\verb+/MarkSquare2D+ describes a marker of a two-dimensional right square  
+put in the 3D world.
+\verb+/MarkSquare2D+ corresponds to class G4Square of GEANT4 with
+its size given as world-coordinate size.
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%---------------------------------------
+Format     & \verb+/MarkSquare2D  x y z  dx+\\
+\hline%---------------------------------------
+(x, y, z)  &  marked 3D position  \\
+\hline%---------------------------------------
+dx         &  marker size (3D unit): half edge length of the square \\
+\hline%---------------------------------------
+\end{tabular}
+
+
+%----------------------------
+\subsection{/MarkSquare2DS}  
+%----------------------------
+\verb+/MarkSquare2D+ describes a marker of a two-dimensional right square  
+put in the 3D world.
+\verb+/MarkSquare2DS+ corresponds to class G4Square of GEANT4 with
+its size given as screen size.
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%---------------------------------------
+Format     & \verb+/MarkSquare2DS  x y z  dx+\\
+\hline%---------------------------------------
+(x, y, z)  &  marked 3D position  \\
+\hline%---------------------------------------
+dx         &  marker size (2D unit): half edge length of the square \\
+\hline%---------------------------------------
+\end{tabular}
+
+
+%----------------------------
+\subsection{/MarkText2D}  
+%----------------------------
+\verb+/MarkText2D+ displays a text (string) to a marked 3D position. 
+The marked position is the left end of the text.
+\verb+/MarkText2D+ corresponds to class G4Text of GEANT4 with
+its size given as world-coordinate size.
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%---------------------------------------
+Format     & \verb+/MarkText2D  x y z size x_offset y_offset string+\\
+\hline%---------------------------------------
+(x, y, z)  &  marked 3D position (left end of string) \\
+\hline%---------------------------------------
+size       &  font size (3D unit) \\
+\hline%---------------------------------------
+x\_offset   &  horizontal offset (3D unit) \\
+\hline%---------------------------------------
+y\_offset   &  vertical   offset (3D unit) \\
+\hline%---------------------------------------
+string     &  string to be displayed (Do not quote with ^^ ^^ ''.)\\
+\hline%---------------------------------------
+\end{tabular}
+\vspace{.20in}
+
+
+%----------------------------
+\subsection{/MarkText2DS}  
+%----------------------------
+\verb+/MarkText2DS+ displays a text (string) to a marked 3D position. 
+The marked position is the left end of the text.
+\verb+/MarkText2DS+ corresponds to class G4Text of GEANT4 with
+its size given as screen size.
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%---------------------------------------
+Format     & \verb+/MarkText2DS  x y z size x_offset y_offset string+\\
+\hline%---------------------------------------
+(x, y, z)  &  marked 3D position  \\
+\hline%---------------------------------------
+size       &  font size  (2D unit, i.e.~pt) \\
+\hline%---------------------------------------
+x\_offset   &  horizontal offset (2D units, i.e.~pt) \\
+\hline%---------------------------------------
+y\_offset   &  vertical   offset (2D units, i.e.~pt) \\
+\hline%---------------------------------------
+string     &  string to be displayed (Do not quote with ^^ ^^ ''.)\\
+\hline%---------------------------------------
+\end{tabular}
+\vspace{.20in}
+
+\noindent
+For example, suppose that we want to display a string 
+"Fukui Renderer DAWN" with the following attributes:
+
+\begin{itemize}
+\item   position: (1,2,3) in the current body coordinate
+\item   color   : red  
+\item   font name  : Courier  
+\item   font size  : 12      (2D unit)
+\item   horizontal offset: 6 (2D unit) 
+\item   vertical offset:   3 (2D unit) 
+\end{itemize}
+
+\noindent
+The following lines described in the modeling block 
+displays this string on the screen.
+\begin{verbatim}
+/ColorRGB  1 0 0  
+/FontName Courier 
+/MarkText2DS 1 2 3 12 6 3 Fukui Renderer DAWN
+\end{verbatim}
+\vspace{.20in}
+
+\noindent
+Note that all arguments beginning with the 7-th argument, 
+i.e., ^^ ^^ Fukui'' in the above example, 
+are grouped and treated as one string.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Drawing Texts directly on 2D screen} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------
+\subsection{/Text2DS} 
+%----------------------------
+
+\verb+/Text2DS+ displays a text (string) directly 
+on the two-dimensional space on screen.
+No corresponding classes exist in GEANT4.
+Note that its position, i.e., left end of the string,
+is described with 2D position vector described 
+in units of ^^ ^^ mm'',
+and its origin is the left bottom of the screen.
+Font size should be given in units of ^^ ^^ pt''.
+\verb+/Text2DS+ is convenient to add title strings etc 
+to drawn figures afterwards.
+\vspace{.20in}
+
+\begin{tabular}{|c|l|}
+\hline%---------------------------------------
+Format        & \verb+/Text2DS  x_mm y_mm  size_pt string+\\
+\hline%---------------------------------------
+(x\_mm, y\_mm)  &  Left end of string on screen. \\
+		&  Unit is mm. Origin (0,0) is the left-bottom.\\
+\hline%---------------------------------------
+size       &  font size (in units of pt) \\
+\hline%---------------------------------------
+string     &  string to be displayed \\
+\hline%---------------------------------------
+\end{tabular}
+\vspace{.20in}
+
+\noindent
+For example, the following lines described in the modeling block 
+displays a large title "Supported Primitives 1" at the bottom center of 
+the screen:  
+\vspace{.20in}
+
+\begin{verbatim}
+### black color 
+/ColorRGB 0 0 0 
+### font name  
+/FontName Times-Roman 
+### 40-pixel string at (30, 40) on screen 
+/Text2DS 30 40 40 Supported Primitives 1
+\end{verbatim}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Sample g4.prim-format data files}   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Many viewable sample g4.prim-format data files
+are included in the DAWN package.  
+For example, see files \verb+primitives.prim+ 
+and \verb+primitives2.prim+.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Relation to an old g4.prim format}   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%The g4.prim format version 2.0 is adopted by DAWN version 3.00a. 
+%There is an old g4.prim format which is readable by DAWN upto version 2.XX, 
+%and is not readable by DAWN version 3.XX.
+%
+%If you want to visualize an old g4.prim-format file with DAWN version 3.XX, 
+%edit the file as follows:
+%
+%\begin{enumerate} 
+%\item Add a heading comment line beginning with ^^ ^^ \verb+##+'' 
+%\item Replace each line of \verb+/MarkCircle2D x y z r R G B+ 
+%with the following two lines:
+%\begin{verbatim}
+%/ColorRGB  R G B
+%/MarkCircle2D x y z r  
+%\end{verbatim}
+%\item Do the same thing for \verb+/MarkSquare2D x y z r R G B+. 
+%\end{enumerate}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}
+

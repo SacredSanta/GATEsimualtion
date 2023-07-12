@@ -1,0 +1,2 @@
+* In RedHat 8/9, X,  X-LS buttons in the 4-th page 
+  of the GUI panel do not work. 

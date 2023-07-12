@@ -1,0 +1,229 @@
+#! /bin/csh
+
+##### MESSAGE #####
+echo '****************************************************'
+echo '* Configure script to generate Makefile of DAWN    *'
+echo '*                       ------ without OpenGL mode *'
+echo '*                                                  *'
+echo '* (Note: If you want to incorporate OpenGL mode,   *'
+echo '*        use the other script "configure".      )  *'
+echo '****************************************************'
+
+echo ""
+echo ""
+
+##### INPUT #####
+#----- C++ compiler name
+echo "Input C++ compiler name (e.g. g++, no default)."
+echo -n " :"
+set cpp_compiler=$<
+
+#----- Optimization option of the C++ compiler
+echo     "Input optimization option (e.g. -O2, no default)"
+echo -n  " :"
+set optimize=$<
+
+#----- Input Tcl/Tk window shell name
+echo    "Input Tcl/Tk window shell name"
+echo -n "  (e.g. wish, no default): "
+set wish=$<
+
+
+#----- 
+echo    'Input include directory of Xlib "with -I":'
+echo    "  (e.g. -I/usr/X11R6/include) "
+echo    "   Hit return key if path is already set properly.            )"
+echo -n " : "
+set xlib_inc=$<
+echo ""
+
+
+#----- 
+echo    'Input lib directory of Xlib "with -L":'
+echo    "  (e.g. -L/usr/X11R6/lib) "
+echo    "   Hit return key if path is already set properly.)"
+echo -n " : "
+set xlib_lib=$<
+echo ""
+
+#----- Input directory name to install dawn and DAWN_GUI
+echo    "Input directory to install executable files"
+echo -n "  (e.g. /usr/local/bin, no default ): "
+set install_dir=$<
+
+#----- Input system name
+echo -n  "Select a system (0: Defalut, 1: AIX, 2: IRIX, 3: Solaris, 4: RedHat Linux): "
+set sysid=$<
+switch ($sysid)
+   case "0":
+    set sysname = "Default"
+    breaksw	
+   case "1":
+    set sysname = "AIX"
+    breaksw	
+   case "2":
+    set sysname = "IRIX"
+    breaksw	
+   case "3":
+    set sysname = "Solaris"
+    breaksw	
+   case "4":
+    set sysname = "RedHat"
+    breaksw	
+   default:
+    set sysname = "Default"
+    breaksw	
+endsw
+echo ""
+
+#----- Use/unuse of remote visualization
+echo     "Do you use remote-visualization function? (y/n, no default)"
+echo     " (Select n if your compilation fails for FRClientServer.cc)"
+echo  -n " : "
+set ynflag_socket=$<
+switch ($ynflag_socket)
+   case "y":
+    set macro_socket = '#define USE_SOCKET'
+    breaksw	
+   case "n":
+    set macro_socket = '//#define USE_SOCKET'
+    breaksw	
+endsw
+echo ""
+
+
+##### DELETE #####
+#----- Delete old Makefile if any
+echo ""
+if ( -f Makefile ) then 
+	rm -f Makefile
+	echo "Old Makefile is deleted."
+endif
+
+#----- Delete old DAWN_GUI_menu.header2 if any
+if ( -f DAWN_GUI_menu.header2 ) then 
+	rm -f DAWN_GUI_menu.header2
+endif
+
+#----- Delete old dev_control.h if any
+if ( -f dev_control.h ) then 
+	rm -f dev_control.h 
+endif
+
+#----- Delete old FRSocketConfig.h if any
+if ( -f FRSocketConfig.h ) then 
+	rm -f FRSocketConfig.h 
+endif
+
+
+##### CREATE MAKEFILE 
+#----- Create a new Makefile
+echo "### MAKEFILE (UNIX with X-win without OpenGL)###" > Makefile
+echo ""                                                >> Makefile 
+
+echo "### C++ compiler"                                >> Makefile
+#echo "ifndef CXX"                                      >> Makefile
+echo "CC = $cpp_compiler"                              >> Makefile
+#echo "else"                                            >> Makefile
+#echo 'CC = $(CXX)'                                     >> Makefile
+#echo "endif"                                           >> Makefile
+echo ""                                                >> Makefile
+
+echo "### Optimization"                                >> Makefile
+echo "OPTIMIZE = $optimize"                            >> Makefile
+echo ""                                                >> Makefile
+
+echo "### Waring level"                                >> Makefile
+echo "WARNING = "                                      >> Makefile
+echo "#WARNING = -Wall"                                >> Makefile
+echo ""                                                >> Makefile
+
+echo "### Window shell"                                >> Makefile
+echo "WISH = $wish"                                    >> Makefile
+echo ""                                                >> Makefile
+
+
+echo "### Xlib lib directory"                          >> Makefile
+echo "XLIB_LIB = $xlib_lib"                            >> Makefile
+echo ""                                                >> Makefile
+
+echo "### Xlib   include directory"                    >> Makefile
+echo "XLIB_INC  = $xlib_inc"                           >> Makefile
+echo ""                                                >> Makefile
+
+echo "### Directory where to install executable files" >> Makefile
+echo "INSTALL_DIR = $install_dir"                      >> Makefile
+echo ""                                                >> Makefile
+
+echo "### Socket libraries to be linked "              >> Makefile
+switch ($sysid)
+   case "3":
+    echo "SOCKET_LIBS = -lsocket -lnsl"                >> Makefile
+    set  socketlib = "-lsocket -lnsl"
+    breaksw	
+   default:
+    echo "SOCKET_LIBS ="                               >> Makefile
+    set  socketlib = ""
+    breaksw	
+endsw
+
+echo ""                                                >> Makefile
+
+cat Makefile_xwin.in                                   >> Makefile
+
+##### SOURCE FILES CREATION #####
+#----- Create a new DAWN_GUI_menu.header2
+echo  exec $wish \"\$0\" \"\$\@\"                     >  DAWN_GUI_menu.header2
+
+#----- Create a new dev_control.h
+echo  '#if \!defined DEV_CONTROL_H'                 >  dev_control.h
+echo  '#define DEV_CONTROL_H'                       >> dev_control.h
+echo  ""                                            >> dev_control.h
+echo  '//#define USE_OPEN_GL'                       >> dev_control.h
+echo  '#define USE_XWIN'                            >> dev_control.h
+echo  '#define USE_UNIX'                            >> dev_control.h
+echo  $macro_socket                                 >> dev_control.h
+echo  '#endif'                                      >> dev_control.h
+
+#----- Create system dependent features
+switch ($sysid)
+   case "0":
+    cp socket.default FRSocketConfig.h
+    breaksw	
+   case "1":
+    cp socket.aix     FRSocketConfig.h
+    breaksw	
+   case "2":
+    cp socket.irix    FRSocketConfig.h
+    breaksw	
+   case "3":
+    cp socket.solaris FRSocketConfig.h
+    breaksw	
+   case "4":
+    cp socket.redhat  FRSocketConfig.h
+    breaksw	
+   default:
+    cp socket.default FRSocketConfig.h
+    breaksw	
+endsw
+
+
+##### MESSAGE #####
+echo "New Makefile is created."
+echo ""
+echo "C++ compiler            : $cpp_compiler"
+echo "Optimization level      : $optimize"
+echo "Tcl/Tk window shell     : $wish"
+echo "Xlib include directory  : $xlib_inc"
+echo "Xlib lib directory      : $xlib_lib"
+echo "Socket libraries        : $socketlib"
+echo "System name             : $sysname"
+echo "Remote visualization    : $ynflag_socket"
+echo ""
+echo 'Type  "make" to start compilation.'
+echo ""
+echo 'After compilation, type  "make install" for installation.'
+echo 'Then four executable files "dawn", "DAWN_GUI",' 
+echo '"dawnunixd", and "dawninetd"  will be installed to '
+echo "$install_dir."
+echo ""

@@ -1,0 +1,45 @@
+##G4.PRIM-FORMAT-2.4
+
+##### List of primitives 1 #####
+/BoundingBox -1.0  -1.0 -5.0   8.0  4.0  6.0
+!SetCamera
+!OpenDevice 
+!BeginModeling
+
+# Box
+/Origin   0.0  0.0  0.0 
+/ColorRGB 1.0  0.0  0.0 
+/Box 0.5  2.0  4.5 
+
+# Column
+/Origin   4.0  0.0  0.0 
+/ColorRGB 0.0  1.0  0.0 
+/Ndiv 50
+/Column 1.5  2.0 
+
+# Trd
+/Origin   0.0  0.0  0.0 
+/ColorRGB 0.0  1.0  1.0 
+/Origin   7.0  0.0  0.0 
+/Trd      1 0.5 1 0.5 4 
+
+# Cone segment
+/Origin   1.0  5.0  0.0 
+/ColorRGB 0.0  1.0  1.0 
+/Cons     1 1.5  0.5 1.0 2.0  1.5 4.5
+
+# Tube segment
+/Origin   7.0  7.0  0.0 
+/ColorRGB 0.0  1.0  1.0 
+/Tubs     1 1.5 2.0 1.5 4.5
+
+# Sphere
+/Ndiv 25
+/Origin   4.0  4.0  0.0 
+/ColorRGB 0.0  1.0  1.0 
+/Sphere   1.5
+
+!EndModeling
+!DrawAll 
+!CloseDevice 
+

@@ -1,0 +1,196 @@
+<PRE>
+#============================================# 
+#  Environmental variables to customize      #
+#  Fukui Renderer DAWN                       #
+#============================================#
+
+#
+# The followings are environmental variables to
+# customize behavior of DAWN.  
+# You do need not set them explicitly, 
+# if their default values are fine for you.
+#
+
+###########################################
+## Environmental variables to be set at  ##
+## DAWN host (1)                         ##  
+###########################################
+
+#----- PostScript previewer: 
+#        The default PostScript viewer 
+#        appeared on the GUI panel.
+#        The default is "gv"
+#        Set it to "NONE" to skip viewing.
+#
+#        Note: This setting is overwritten by the one
+#              described in the file ./.DAWN_1.history 
+#              You may have to type "dawn -c" to remove 
+#              the file ./.DAWN_1.history  beforehand. 
+#
+
+  setenv  DAWN_PS_PREVIEWER          "gv"
+
+#----- Batch mode 
+#        If this variable is set to "1", 
+#        the GUI panel does not invoked.
+#        Visualization is not performed, either.
+#        An EPS file is generated in the current directory.
+#
+#        If this variable is set to "a", 
+#        the effects are the same as the above except that 
+#        "append mode" is made active and that the 
+#        "showpage" is added at the end of each data.
+#        In the convined use with Geant4, this setting 
+#        generate a multi-page g4.eps file.
+#        Commenting out the "showpage"'s makes the date 
+#        accumulate in one page. 
+#
+#        The dafault value of this variable is "0".
+
+  setenv  DAWN_BATCH                "0"
+# setenv  DAWN_BATCH                "1"
+# setenv  DAWN_BATCH                "a"
+
+
+#----- Default device
+#        A default graphics device
+#        The default is 2, i.e. "X Window". 
+#        PS = 1, XWIN = 2, PS2 = 3 , XWIN2 = 4, OPEN_GL = 5;
+
+# setenv  DAWN_DEVICE  "1"
+  setenv  DAWN_DEVICE  "2"
+# setenv  DAWN_DEVICE  "3"
+# setenv  DAWN_DEVICE  "4"
+# setenv  DAWN_DEVICE  "5"
+
+
+#----- Upward direction 
+#        Direction of upvector.
+#        Select "Y" or "Z".
+#        The default is "Y", i.e., (0,1,0)-direction
+
+  setenv  DAWN_UP_DIRECTION "Y"
+# setenv  DAWN_UP_DIRECTION "Z" 
+
+#----- Back-Face Culling mode
+#        If this mode is on, analytical hidden-surface removal 
+#        is skipped, and only back-face culling is performed.
+#        This is fast, but inaccurate.
+#        By default, this mode is off.
+
+  setenv  DAWN_BFC_MODE   "0"
+# setenv  DAWN_BFC_MODE   "1"
+
+#----- Stencil mode 
+#        If this mode is on, edges are drawn in OpenGL mode
+#        By default, this mode is off.
+
+  setenv  DAWN_USE_STENCIL "0"
+# setenv  DAWN_USE_STENCIL "1"
+
+#----- Hidden-line removalmode
+#        If this mode is on, hidden-line removal is performed.
+#        By default, this mode is on.
+
+#  setenv  DAWN_HIDLINE_REMOVAL "0"
+   setenv  DAWN_HIDLINE_REMOVAL "1"
+
+
+###########################################
+## Environmental variables to be set at  ##
+## DAWN host (2)                         ##  
+##                                       ## 
+## Variables below need not be modified  ##
+## in most of cases                      ##  
+###########################################
+
+#----- Maximum number of polygons processed in one session of
+#      the incremental hidden-surface removal:
+#        The default is "10000".
+
+  setenv  DAWN_MAX_POLYGON_PER_SESSION     "10000"
+
+#----- Tolerance in the 1x1 2D screen:
+#       You may rarely have to modify this value 
+#       in drawing figures with small scale 
+#       compared with the screen size 1x1.
+#       The default is "1.0e-7".
+
+  setenv  DAWN_TOLERANCE_2D                "1.0e-7"
+
+#----- Boolean flag to accumulate data in successive drawings
+#        The default is "0", i.e., no accumulation
+#        Note 1: In wireframe mode, data are not accumulated.
+#                Use stored wireframe mode instead.
+#        Note 2: Available only for network connection
+
+  setenv  DAWN_DATA_ACCUMULATION  "0"
+# setenv  DAWN_DATA_ACCUMULATION  "1"
+
+
+###########################################
+## Environmental variables to CUSTOMIZE  ##
+## GEANT4 DAWNFILE driver                ##  
+###########################################
+
+#----- Boolean flag to invoke multi-window 
+#        If this variable is set and the value is non-zero,
+#        GEANT4 opens DAWN with multi-window mode.
+#        Otherwise it opens DAWN with EPS mode,
+#        which generates EPS file and invoke PS viewer finally.
+#        (Note: This variables is scanned at GEANT4 side.)
+#        The default is "0".
+   setenv  G4DAWN_MULTI_WINDOW      "0"
+#  setenv  G4DAWN_MULTI_WINDOW      "1"
+
+
+###########################################
+## Environmental variables to CUSTOMIZE  ##
+## GEANT4 DAWN   network  driver         ##  
+## (Note this driver should be used only ##
+##  for remote visualizaton.)            ##
+###########################################
+
+#----- Boolean flag to invoke multi-window 
+#        If this variable is set and the value is non-zero,
+#        GEANT4 opens DAWN with multi-window mode.
+#        Otherwise it opens DAWN with EPS mode,
+#        which generates EPS file and invoke PS viewer finally.
+#        (Note: This variables is scanned at GEANT4 side.)
+#        The default is "0".
+   setenv  G4DAWN_MULTI_WINDOW      "0"
+#  setenv  G4DAWN_MULTI_WINDOW      "1"
+
+
+#----- Boolean flag to control GUI invokation
+#        If this variable is set and the value is non-zero,
+#        DAWN connected with GEANT4 always pops up GUI menu.
+#        (Note: This variables is scanned at GEANT4 side.)
+#        The default is "0", i.e., no GUI.
+
+  setenv  G4DAWN_GUI_ALWAYS                  "0" 
+# setenv  G4DAWN_GUI_ALWAYS                  "1" 
+
+#----- Boolean flag to set on BSD-type Unix-domain connection
+#        If this variable is set and the value is non-zero,
+#        DAWN connected with GEANT4 in the BSD-type Unix domain,
+#        i.e. named pipe.
+#        (Note: This variables is scanned at GEANT4 side.)
+#        The default is "0", i.e., do no use this way of 
+#        connection.
+
+  setenv  G4DAWN_NAMED_PIPE             "0"
+# setenv  G4DAWN_NAMED_PIPE             "1"
+
+#----- DANW host: 
+#        If this variable is set,
+#        GEANT4 ( or the sample program "g4test_inet" )
+#        send solid data to DAWN invoked by "dawninetd"
+#        and running at the specified host. 
+#        If G4DAWN_NAMED_PIPE is set to "1",
+#        the host-name setting with G4DAWN_HOST_NAME is ignored.
+#        (Note: This variables is scanned at GEANT4 side.)
+
+# setenv  G4DAWN_HOST_NAME  cernsp.cern.ch
+
+</PRE>

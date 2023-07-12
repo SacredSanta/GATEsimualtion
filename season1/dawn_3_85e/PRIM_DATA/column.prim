@@ -1,0 +1,24 @@
+##G4.PRIM-FORMAT-2.4
+###############################################################
+# Column (Tube segment with no hole and full azimuthal angle)
+#
+# /Column  2.0  2.0 
+#          R    dz
+#
+#  R: radius of bottom plane,  dz: half height along z-axisOA
+###############################################################
+
+# 
+/BoundingBox -2.0 -2.0 -2.0   2.0  2.0  2.0
+!SetCamera
+!OpenDevice 
+!BeginModeling
+
+/ColorRGB  1 0 1
+
+#       R    dz
+/Column 2.0  2.0 
+
+!EndModeling
+!DrawAll 
+!CloseDevice 

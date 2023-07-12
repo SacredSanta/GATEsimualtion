@@ -1,0 +1,58 @@
+/********************************************/
+/*** Imakefile for Fukui Renderer library ***/
+/********************************************/
+
+INSTALL_LIB = libFR.a
+INSTALL_LIBDIR = /usr/local/lib
+INSTALL_INCDIR = /usr/local/include/FR
+
+CC = g++
+MYDEFINES = -g
+
+CFLAGS = -O2 $(MYDEFINES)
+
+/*********** define functions ***********/
+#define InstallNewLibrary(file,destdir)		@@\
+install.lib: file							@@\
+	@if [ ! -d destdir ]; then \			@@\
+		(set -x; $(MKDIRHIER) destdir); fi	@@\
+	@$(CP) file destdir						@@\
+	@echo file was installed at destdir
+
+#define InstallNewIncludeFiles(file,destdir)@@\
+install.inc: file							@@\
+	@if [ ! -d destdir ]; then \			@@\
+		(set -x; $(MKDIRHIER) destdir); fi	@@\
+	@$(CP) file destdir						@@\
+	@echo file was installed at destdir
+
+
+/************ main ************/
+LIB_SRCS = string.cc slist.cc hash.cc
+LIB_SRC_OBJS = string.o slist.o hash.o
+
+INSTALL_INCS = FRBoolean.h FRNDouble.h FRRadian.h FRDegree.h \
+FRVector2.h FRVector3.h FRVectorSph.h FRRGB.h FRHSV.h FRCMY.h FRString.h \
+FRArray.h FRSList.h FRSList.cc FRHash.h slist.h hash.h
+
+SRCS = $(INSTALL_INCS) $(LIB_SRCS)
+
+.cc.o:;	$(CC) $(CFLAGS) -c $*.cc
+
+$(INSTALL_LIB) : $(LIB_SRC_OBJS)
+	$(AR) $(INSTALL_LIB) $(LIB_SRC_OBJS)
+
+install:: install.lib install.inc
+
+InstallNewLibrary($(INSTALL_LIB),$(INSTALL_LIBDIR))
+
+InstallNewIncludeFiles($(INSTALL_INCS),$(INSTALL_INCDIR))
+
+uninstall::
+	$(RM_CMD) $(INSTALL_LIBDIR)/$(INSTALL_LIB)
+	$(RM_CMD) -R $(INSTALL_INCDIR)
+
+clean::
+	$(RM_CMD) $(INSTALL_LIB)
+
+DependTarget()

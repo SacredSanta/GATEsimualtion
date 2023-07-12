@@ -1,0 +1,194 @@
+##G4.PRIM-FORMAT-2.4
+#####################
+# Columns in a box ##
+#####################
+
+/BoundingBox  -1500  -1500  -1000 1500  1500  1000
+!SetCamera
+!OpenDevice
+!BeginModeling
+/Ndiv  24
+/ForceWireframe 1
+/ColorRGB  1.0  0.0  0.0
+/Origin  0  0  0
+/BaseVector  1  0  0 0  1  0
+/Box  1500  1500  1000
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -997.5  -960  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -952.5  -960  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -907.5  -960  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -862.5  -960  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -817.5  -960  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -997.5  -880  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -952.5  -880  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -907.5  -880  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -862.5  -880  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -817.5  -880  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -997.5  -800  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -952.5  -800  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -907.5  -800  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -862.5  -800  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -817.5  -800  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -975  -1000  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -930  -1000  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -885  -1000  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -840  -1000  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -795  -1000  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -975  -920  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -930  -920  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -885  -920  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -840  -920  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -795  -920  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -975  -840  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -930  -840  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -885  -840  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -840  -840  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -795  -840  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -975  -760  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -930  -760  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -885  -760  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -840  -760  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+/ForceWireframe  0  
+/ColorRGB  0.0  1.0  1.0
+/Origin  -795  -760  0
+/BaseVector  1  0  0 0  1  0
+/Column  22.5  100
+!EndModeling
+!DrawAll
+!CloseDevice
+

@@ -1,0 +1,49 @@
+##G4.PRIM-FORMAT-2.4
+
+##### List of primitives 2 #####
+
+/BoundingBox -2.0  -1.0 -5.0   10.0  4.0  6.0
+!SetCamera
+!OpenDevice 
+!BeginModeling
+
+# Parallelepiped 
+/Origin   0.0  -1.0  0.0 
+/ColorRGB 1.0  0.0  0.0 
+/Parallelepiped 1.0 1.0 3 1.0 0.41 0.41
+
+# Polycone
+/Origin     1.5  3.5  0.0 
+/ColorRGB   0.0  1.0  0.0 
+/Ndiv 50
+/PolyCone   1.8  4.71  4  -3.0 -1.0 1.0 3.0  1.0 0.5 1.5 1.0  1.5 1.0 2.0 1.5
+
+# PolyGon
+/Origin     8.0  6.0  0.0 
+/ColorRGB   0.0  1.0  1.0 
+/PolyGon    1.8  4.71  5  4  -3.0 -1.0 1.0 3.0  1.0 0.5 1.5 1.0  1.5 1.0 2.0 1.5
+
+# Sphere segment
+/Origin     6.0  0.0  0.0 
+/ColorRGB 1.0  0.0  1.0 
+/Ndiv 25
+/SphereSeg  1.6 1.8  0.5 2.5  0  6.0
+
+# Asymmetric trapezoid
+/Origin     3.0  8.0  0.0 
+/ColorRGB   1.0  1.0  0.0 
+/Ndiv 50
+/Trap       2.0  0.26 0.0  1.0  0.7  1.2  0.0   0.5  0.35 0.6 0.0
+
+# Text
+/ColorRGB  0 0 0 
+/Text2DS   30 40 40 Supported Primitives 2
+
+# Mark
+/MarkCircle2DS   0  0  0  0.1
+
+!EndModeling
+!DrawAll 
+!CloseDevice 
+#!EndSave
+

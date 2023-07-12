@@ -1,0 +1,48 @@
+TARGET= dawn_menu
+OUTPUT= DAWN_GUI_menu.body
+
+
+OBJS= $(TARGET).o FUMenu.o string.o slist.o
+CC=g++
+CFLAGS=-Wall -O2 -g
+
+.cc.o :
+	$(CC) $(CFLAGS) -c $<
+
+all : $(TARGET)
+
+$(TARGET) : $(OBJS) 
+	ar r libFRGUI.a FUMenu.o string.o slist.o
+	$(CC) $(CFLAGS) -o $@  $@.o  -L./ -lFRGUI
+	$(TARGET)
+	cp $(OUTPUT) ../
+
+$(TARGET).o : $(TARGET).cc
+FUMenu.o : FUMenu.cc FUMenu.h
+string.o : FRString.h string.cc 
+slist.o : FRSList.h slist.cc slist.h
+
+gui: $(TARGET)
+	rm -f .DAWN.history .DAWN.default
+	$(TARGET)
+	wish DAWN_GUI_menu.body
+
+clean_his:
+	rm -f .DAWN.history .DAWN.default
+
+clean :
+	rm -f $(OBJS) $(TARGET)
+	rm -f *~
+	rm -f .DAWN.history .DAWN.default
+	rm -f libFRGUI.a	
+	rm -f $(OUTPUT)
+	rm -f \#* core a.out
+	cd FRlib ; make clean ;
+
+
+
+
+
+
+
+

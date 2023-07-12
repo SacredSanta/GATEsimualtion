@@ -1,0 +1,21 @@
+#! /bin/sh
+####################################################
+# shell script to make LaTeX file
+#                     S.TANAKA 1997.01.28
+# USAGE: dawn_eps2ps eps_file ps_file"
+####################################################
+
+if [ $# -ne 2 ] 
+ then	echo "USAGE: dawn_eps2ps eps_file ps_file"
+	echo " "
+	echo "Note : What this tool does is only to add "  
+        echo "       showpage command at the end of "
+	echo "       the given eps file. "
+	exit
+fi
+
+cat $1 >> $2
+
+cat >> $2 << EOF
+showpage
+EOF

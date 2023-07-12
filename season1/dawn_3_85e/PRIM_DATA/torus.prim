@@ -1,0 +1,23 @@
+##G4.PRIM-FORMAT-2.4
+
+###################################################
+## Tube segment
+## 
+## /Torus  rmin  rmax  rtor   sphi   dphi  
+##        
+###################################################
+
+/BoundingBox -12.0 -12.0 -12.0   12.0  12.0  12.0
+!SetCamera
+!OpenDevice 
+!BeginModeling
+
+/ColorRGB  0 1 1
+
+##     rmin  rmax  rtor   sphi   dphi  
+/Torus 0.0   1.0   10.0   0.0    10
+
+!EndModeling
+!DrawAll 
+!CloseDevice 
+

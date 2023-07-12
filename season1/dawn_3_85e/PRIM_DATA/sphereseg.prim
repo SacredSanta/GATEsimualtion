@@ -1,0 +1,29 @@
+##G4.PRIM-FORMAT-2.4
+
+######################################################
+## Sphere segment
+##
+## /SphereSeg  rmin  rmax  stheta  dtheta  sphi  dphi 
+##             
+##
+## Note: -2PI <= sphi   <= 2PI ,  0 <= dphi <= 2PI
+##        0   <= stheta <= PI  ,  0 <= dtheta <= PI 
+##
+##       Automatic angle trancation is supported.
+##       For example, dphi = 1000 is trancated to
+##       dphi = 2PI
+#####################################################
+
+/BoundingBox -2.0 -2.0 -2.0   2.0  2.0  2.0
+!SetCamera
+!OpenDevice 
+!BeginModeling
+
+/ColorRGB   0 1 1
+
+#           rmin  rmax  stheta  dtheta  sphi  dphi
+/SphereSeg  1.6   1.8   0.5      2.5     0    6.0
+
+!EndModeling
+!DrawAll 
+!CloseDevice 

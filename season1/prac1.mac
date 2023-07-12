@@ -1,0 +1,216 @@
+
+### 1.define scanner geometry
+#############################
+
+/gate/geometry/setMaterialDatabase GateMaterials.db
+/control/execute vis.mac
+
+/gate/world/geometry/setXLength 1000. cm
+/gate/world/geometry/setYLength 1000. cm
+/gate/world/geometry/setZLength 1000. cm
+
+/gate/world/daughters/name cylindricalPET
+/gate/world/daughters/insert cylinder
+/gate/cylindricalPET/setMaterial Water
+/gate/cylindricalPET/geometry/setRmax 100 mm
+/gate/cylindricalPET/geometry/setRmin 86 mm
+/gate/cylindricalPET/geometry/setHeight 18 mm
+/gate/cylindricalPET/vis/forceWireframe
+/vis/viewer/zoom 3
+
+
+# FIRST LEVEL OF THE SYSTEM
+/gate/cylindricalPET/daughters/name box1
+/gate/cylindricalPET/daughters/insert box
+/gate/box1/placement/setTranslation 91. 0 0 mm
+/gate/box1/geometry/setXLength 10. mm
+/gate/box1/geometry/setYLength 17.75 mm
+/gate/box1/geometry/setZLength 17.75 mm
+/gate/box1/setMaterial Water
+/gate/box1/vis/setColor yellow
+/gate/box1/vis/forceWireframe
+
+# CRYSTAL
+/gate/box1/daughters/name box2
+/gate/box1/daughters/insert box
+/gate/box2/geometry/setXLength 10. mm
+/gate/box2/geometry/setYLength 2. mm
+/gate/box2/geometry/setZLength 2. mm
+/gate/box2/setMaterial LSO
+/gate/box2/vis/setColor red
+/gate/box2/vis/forceWireframe
+
+# ZOOM
+/vis/viewer/zoom 4
+/vis/viewer/panTo 60 -40 mm
+
+# REPEAT CRYSTAL
+/gate/box2/repeaters/insert cubicArray
+/gate/box2/cubicArray/setRepeatNumberX 1
+/gate/box2/cubicArray/setRepeatNumberY 8
+/gate/box2/cubicArray/setRepeatNumberZ 8
+/gate/box2/cubicArray/setRepeatVector 0. 2.25 2.25 mm
+
+
+# REPEAT RSECTOR
+/gate/box1/repeaters/insert ring
+/gate/box1/ring/setRepeatNumber 30
+
+# ZOOM
+/vis/viewer/zoom 0.25
+/vis/viewer/panTo 0 0 mm
+
+# ATTACH VOLUMES TO A SYSTEM
+/gate/systems/cylindricalPET/rsector/attach box1
+/gate/systems/cylindricalPET/module/attach box2
+
+# DEFINE A SENSITIVE DETECTOR
+/gate/box2/attachCrystalSD
+
+
+#####################################
+# 2. DEFINE A PHANTOM GEOMETRY
+####################################
+
+# PHANTOM
+/gate/world/daughters/name my_phantom
+/gate/world/daughters/insert cylinder
+/gate/my_phantom/setMaterial Water
+/gate/my_phantom/vis/setColor grey
+/gate/my_phantom/geometry/setRmax   10. mm
+/gate/my_phantom/geometry/setHeight 30. mm
+
+# PHANTOM DEFINED AS SENSITIVE
+/gate/my_phantom/attachPhantomSD
+
+###################################
+# 3. set up the physics proceess
+###################################
+
+
+
+###################################
+# 4. initialize the simulation
+##################################
+/gate/run/initialize
+
+
+####################################
+# 5. set up the detector model
+###################################
+/gate/digitizer/Singles/insert adder
+/gate/digitizer/Singles/insert readout
+/gate/digitizer/Singles/readout/setDepth 1
+
+# ENERGY BLURRING
+/gate/digitizer/Singles/insert blurring
+/gate/digitizer/Singles/blurring/setResolution 0.19
+/gate/digitizer/Singles/blurring/setEnergyOfReference 511. keV
+
+# ENERGY WINDOW
+/gate/digitizer/Singles/insert thresholder
+/gate/digitizer/Singles/thresholder/setThreshold 250. keV
+/gate/digitizer/Singles/insert upholder
+/gate/digitizer/Singles/upholder/setUphold 650. keV
+
+# COINCIDENCE SORTER
+/gate/digitizer/Coincidences/setWindow 10. ns
+
+
+
+###################################
+# 6. define the source
+###################################
+
+# SOURCE
+/gate/source/addSource twogamma
+/gate/source/twogamma/setActivity 10000. becquerel
+/gate/source/twogamma/setType backtoback
+
+# POSITION
+/gate/source/twogamma/gps/centre 0. 0. 0. cm
+
+# PARTICLE
+/gate/source/twogamma/gps/particle gamma
+/gate/source/twogamma/gps/energytype Mono
+/gate/source/twogamma/gps/monoenergy 0.511 MeV
+
+# TYPE = Volume or Surface
+/gate/source/twogamma/gps/type Volume
+
+# SHAPE = Sphere or Cylinder
+/gate/source/twogamma/gps/shape Cylinder
+/gate/source/twogamma/gps/radius 0.5 mm
+/gate/source/twogamma/gps/halfz 25 mm
+
+# SET THE ANGULAR DISTRIBUTION OF EMISSION
+/gate/source/twogamma/gps/angtype iso
+
+# SET MIN AND MAX EMISSION ANGLES
+/gate/source/twogamma/gps/mintheta 0. deg
+/gate/source/twogamma/gps/maxtheta 180. deg
+/gate/source/twogamma/gps/minphi 0. deg
+/gate/source/twogamma/gps/maxphi 360. deg
+/gate/source/list
+
+
+
+
+####################################
+# 7. specify the data output format    Defining data Output
+####################################
+# ASCII OUTPUT FORMAT
+/gate/output/ascii/enable
+/gate/output/ascii/setFileName test
+/gate/output/ascii/setOutFileHitsFlag 0
+/gate/output/ascii/setOutFileSinglesFlag 1
+/gate/output/ascii/setOutFileCoincidencesFlag 1
+
+# ROOT OUTPUT FORMAT
+/gate/output/root/enable
+/gate/output/root/setFileName test
+/gate/output/root/setRootSinglesFlag 1
+/gate/output/root/setTootCoincidencesFlag 1
+
+
+
+##################################
+# 8.start the acquisition
+#####################################
+/gate/application/setTotalNumberOfPrimaries [N]
+/gate/application/setNumberOfPrimariesPerRun [N]
+/gate/application/readNumberOfPrimariesInAile [/home/vgate/vGate/potato98/prac/testdata]
+
+
+####################################
+# APP1. visualization option
+###################################
+
+
+######################################
+# APP2. Regular time slice approach
+#####################################
+
+/gate/application/setTimeSlice  1. s
+/gate/application/setTimeStart  0. s
+/gate/application/setTimeStop   1. s
+
+/gate/random/setEngineSeed default
+/gate/random/setEngineSeed auto
+/gate/random/setEngineSeed 123456789
+
+/gate/random/resetEngineFrom fileName
+
+# START the ACQUISITION
+/gate/application/startDAQ
+
+#/gate/random/setEngineName aName
+
+
+########################################
+# APP3. Slices with variable time
+########################################
+/gate/application/readTimeSlicesIn [File Name]
+/gate/application/addSlice [value] [unit]
+
+/gate/random/verbose 1

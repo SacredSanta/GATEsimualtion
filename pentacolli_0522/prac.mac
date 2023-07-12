@@ -1,0 +1,164 @@
+
+/control/execute vis.mac
+
+/gate/geometry/setMaterialDatabase ../GateMaterials.db
+
+/gate/world/geometry/setXLength 40. cm
+/gate/world/geometry/setYLength 40. cm
+/gate/world/geometry/setZLength 40. cm
+/gate/world/vis/forceWireframe
+
+/gate/world/daughters/name cylindricalPET
+/gate/world/daughters/insert cylinder
+/gate/cylindricalPET/setMaterial Water
+/gate/cylindricalPET/geometry/setRmax 100 mm
+/gate/cylindricalPET/geometry/setRmin 86 mm
+/gate/cylindricalPET/geometry/setHeight 18 mm
+/gate/cylindricalPET/vis/forceWireframe
+
+
+/gate/cylindricalPET/daughters/name box1
+/gate/cylindricalPET/daughters/insert box
+/gate/box1/placement/setTranslation 91. 0 0 mm
+/gate/box1/geometry/setXLength 10. mm
+/gate/box1/geometry/setYLength 17.75 mm
+/gate/box1/geometry/setZLength 17.75 mm
+/gate/box1/setMaterial Water
+/gate/box1/vis/setColor yellow
+/gate/box1/vis/forceWireframe
+
+/gate/box1/daughters/name box2
+/gate/box1/daughters/insert box
+/gate/box2/geometry/setXLength 10. mm
+/gate/box2/geometry/setYLength 2. mm
+/gate/box2/geometry/setZLength 2. mm
+/gate/box2/setMaterial LSO
+/gate/box2/vis/setColor red
+/gate/box2/vis/forceWireframe
+
+/gate/box2/repeaters/insert cubicArray
+/gate/box2/cubicArray/setRepeatNumberX 1
+/gate/box2/cubicArray/setRepeatNumberY 8
+/gate/box2/cubicArray/setRepeatNumberZ 8
+/gate/box2/cubicArray/setRepeatVector 0. 2.25 2.25 mm
+
+/gate/box1/repeaters/insert ring
+/gate/box1/ring/setRepeatNumber 30
+
+
+/gate/systems/cylindricalPET/rsector/attach box1
+/gate/systems/cylindricalPET/module/attach box2
+
+
+/gate/box2/attachCrystalSD
+
+
+
+
+
+
+
+
+
+/gate/world/daughters/name my_phantom
+/gate/world/daughters/insert cylinder
+/gate/my_phantom/setMaterial Water
+/gate/my_phantom/vis/setColor grey
+/gate/my_phantom/geometry/setRmax   10. mm
+/gate/my_phantom/geometry/setHeight 30. mm
+
+/gate/my_phantom/attachPhantomSD
+
+
+
+/gate/physics/addProcess PhotoElectric gamma
+/gate/physics/processes/PhotoElectric/setModel StandardModel
+/gate/physics/addProcess Compton gamma
+/gate/physics/processes/Compton/setModel PenelopeModel
+/gate/physics/addProcess RayleighScattering gamma
+/gate/physics/processes/RayleighScattering/setModel PenelopeModel
+/gate/physics/addProcess ElectronIonisation e-
+/gate/physics/processes/ElectronIonisation/setModel StandardModel e-
+/gate/physics/addProcess Bremsstrahlung e-
+/gate/physics/processes/Bremsstrahlung/setModel StandardModel e-
+#/gate/physics/addProcess eMultipleScattering e-
+/gate/physics/processList Enabled
+/gate/physics/processList Initialized
+
+
+
+/gate/run/initialize
+
+
+/gate/digitizer/Singles/insert adder
+
+
+
+/gate/source/addSource twogamma
+/gate/source/twogamma/setActivity 100000. becquerel
+/gate/source/twogamma/setType backtoback
+# POSITION
+/gate/source/twogamma/gps/centre 0. 0. 0. cm
+# PARTICLE
+/gate/source/twogamma/gps/particle gamma
+/gate/source/twogamma/gps/energytype Mono
+/gate/source/twogamma/gps/monoenergy 0.511 MeV
+# TYPE = Volume or Surface
+/gate/source/twogamma/gps/type Volume
+# SHAPE = Sphere or Cylinder
+/gate/source/twogamma/gps/shape Cylinder
+/gate/source/twogamma/gps/radius 0.5 mm
+/gate/source/twogamma/gps/halfz 25 mm
+
+# SET THE ANGULAR DISTRIBUTION OF EMISSION
+/gate/source/twogamma/gps/angtype iso
+# SET MIN AND MAX EMISSION ANGLES
+/gate/source/twogamma/gps/mintheta 0. deg
+/gate/source/twogamma/gps/maxtheta 180. deg
+/gate/source/twogamma/gps/minphi    0. deg
+/gate/source/twogamma/gps/maxphi 360. deg
+/gate/source/list
+
+
+
+
+
+
+# ASCII OUTPUT FORMAT
+/gate/output/ascii/enable
+/gate/output/ascii/setFileName ./data/testA
+/gate/output/ascii/setOutFileHitsFlag 0
+/gate/output/ascii/setOutFileSinglesFlag 1
+/gate/output/ascii/setOutFileCoincidencesFlag 1
+# ROOT OUTPUT FORMAT
+/gate/output/root/enable
+/gate/output/root/setFileName ./data/testR
+/gate/output/root/setRootSinglesFlag 1
+/gate/output/root/setRootCoincidencesFlag 1
+
+
+
+
+
+
+/gate/application/setTimeSlice     1.  s
+/gate/application/setTimeStart     0.  s
+/gate/application/setTimeStop      1.  s
+
+
+/gate/random/setEngineSeed auto
+
+
+# S T A R T  the A C Q U I S I T I O N
+/gate/application/startDAQ
+
+
+
+/gate/random/setEngineName JamesRandom
+/gate/random/verbose 0
+
+
+/control/verbose 0
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0

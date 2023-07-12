@@ -1,0 +1,17 @@
+Data in this directory are visualized with 
+
+ %  ../dawn filename
+
+For details, see dawn_XXX/DOC/README and dawn_XXX/DOC/G4PRIM_FORMAT_24.tex.
+
+Note:
+	DAWN included in GEANT4 package has few sample data.
+	If you need more, please ftp DAWN from our ftp site:
+
+        Anonymous ftp site: i1nws2.fuis.fukui-u.ac.jp
+                            /pub/graphics/fukui_graphics_system
+                            /dawn_XXX.tar.gz
+
+
+
+

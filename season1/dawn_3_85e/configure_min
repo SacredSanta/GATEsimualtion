@@ -1,0 +1,117 @@
+#! /bin/csh
+
+##### MESSAGE #####
+echo '********************************************************'
+echo '* Configure script to generate Makefile of DAWN        *'
+echo '*                       ------ device independent mode *'
+echo '********************************************************'
+
+echo ""
+echo ""
+
+##### INPUT #####
+#----- C++ compiler name
+echo "Input C++ compiler name (e.g. g++, no default)."
+echo -n " :"
+set cpp_compiler=$<
+
+#----- Optimization option of the C++ compiler
+echo     "Input optimization option (e.g. -O2, no default)"
+echo -n  " :"
+set optimize=$<
+
+#----- Input Tcl/Tk window shell name
+echo    "Input Tcl/Tk window shell name"
+echo -n "  (e.g. wish, no default): "
+set wish=$<
+
+#----- Input directory name to install dawn and DAWN_GUI
+echo    "Input directory to install executable files"
+echo -n "  (e.g. /usr/local/bin, no default ): "
+set install_dir=$<
+
+
+##### DELETE #####
+#----- Delete old Makefile if any
+echo ""
+if ( -f Makefile ) then 
+	rm -f Makefile
+	echo "Old Makefile is deleted."
+endif
+
+#----- Delete old DAWN_GUI_menu.header2 if any
+if ( -f DAWN_GUI_menu.header2 ) then 
+	rm -f DAWN_GUI_menu.header2
+endif
+
+#----- Delete old dev_control.h if any
+if ( -f dev_control.h ) then 
+	rm -f dev_control.h 
+endif
+
+
+##### CREATE MAKEFILE 
+#----- Create a new Makefile
+echo "### MAKEFILE (UNIX without X-Win without OpenGL) ###"  >  Makefile
+echo ""                                                >> Makefile 
+
+echo "### C++ compiler"                                >> Makefile
+#echo "ifndef CXX"                                     >> Makefile
+echo "CC = $cpp_compiler"                              >> Makefile
+#echo "else"                                           >> Makefile
+#echo 'CC = $(CXX)'                                    >> Makefile
+#echo "endif"                                          >> Makefile
+echo ""                                                >> Makefile
+
+echo "### Optimization"                                >> Makefile
+echo "OPTIMIZE = $optimize"                            >> Makefile
+echo ""                                                >> Makefile
+
+echo "### Waring level"                                >> Makefile
+echo "WARNING = "                                      >> Makefile
+echo "#WARNING = -Wall"                                >> Makefile
+echo ""                                                >> Makefile
+
+echo "### Window shell"                                >> Makefile
+echo "WISH = $wish"                                    >> Makefile
+echo ""                                                >> Makefile
+
+
+echo "### Directory where to install executable files" >> Makefile
+echo "INSTALL_DIR = $install_dir"                      >> Makefile
+echo ""                                                >> Makefile
+
+echo ""                                                >> Makefile
+
+cat Makefile_devindep.in                               >> Makefile
+
+##### SOURCE FILES CREATION #####
+#----- Create a new DAWN_GUI_menu.header2
+echo  exec $wish \"\$0\" \"\$\@\"                     >  DAWN_GUI_menu.header2
+
+#----- Create a new dev_control.h
+echo  '#if \!defined DEV_CONTROL_H'                 >  dev_control.h
+echo  '#define DEV_CONTROL_H'                       >> dev_control.h
+echo  ""                                            >> dev_control.h
+echo  '//#define USE_OPEN_GL'                       >> dev_control.h
+echo  '//#define USE_XWIN'                          >> dev_control.h
+echo  '//#define USE_UNIX'                          >> dev_control.h
+echo  '#endif'                                      >> dev_control.h
+
+
+#----- Create system dependent features
+
+
+##### MESSAGE #####
+echo "New Makefile is created."
+echo ""
+echo "C++ compiler            : $cpp_compiler"
+echo "Optimization level      : $optimize"
+echo "Tcl/Tk window shell     : $wish"
+echo ""
+echo 'Type  "make" to start compilation.'
+echo ""
+echo 'After compilation, type  "make install" for installation.'
+echo 'Then executable files "dawn" and "DAWN_GUI",' 
+echo "$install_dir."
+echo ""

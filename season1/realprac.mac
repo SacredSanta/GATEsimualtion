@@ -1,0 +1,309 @@
+# iCZT coded aperture
+
+# /vis/disable
+# visualize : geometry를 보여주는것? 시뮬레이션 world
+# zore 64 -> figure 64... slow 
+
+/control/execute vis.mac
+
+
+
+# V I S U A L I S A T I O N
+
+
+
+/gate/geometry/setMaterialDatabase ./GateMaterials.db
+# material database loading
+
+
+
+#WORLD
+
+/gate/world/geometry/setXLength 1200 cm
+
+/gate/world/geometry/setYLength 1200 cm
+
+/gate/world/geometry/setZLength 1200 cm
+# 월드공간생성
+
+
+
+#GEOMETRY
+
+/gate/world/daughters/name scanner
+
+/gate/world/daughters/insert box
+
+/gate/scanner/placement/setTranslation 0. 0. 3000. mm
+# 박스의 위치
+/gate/scanner/geometry/setXLength 240. mm
+
+/gate/scanner/geometry/setYLength 240. mm
+
+/gate/scanner/geometry/setZLength 240. mm
+
+/gate/scanner/setMaterial Air
+# 공기로 채워줌 
+
+/gate/scanner/vis/forceWireframe
+# wireframe으로 visualize
+
+
+
+
+
+#collimator
+
+/gate/scanner/daughters/name collimator
+
+/gate/scanner/daughters/insert box
+
+/gate/collimator/geometry/setXLength 37 mm
+
+/gate/collimator/geometry/setYLength 37 mm
+
+/gate/collimator/geometry/setZLength 8 mm
+
+/gate/collimator/placement/setTranslation 0. 0. 4. mm 
+# collimator surface:-500cm
+
+/gate/collimator/setMaterial Tungsten
+
+
+
+
+
+#HOLE REPEATER
+
+/gate/collimator/daughters/name holes
+
+/gate/collimator/daughters/insert box
+
+/gate/holes/geometry/setXLength 1 mm
+/gate/holes/geometry/setYLength 1 mm
+/gate/holes/geometry/setZLength 8 mm
+
+/gate/holes/setMaterial Air
+
+/gate/holes/repeaters/insert genericRepeater
+#repeater 호출
+/gate/holes/genericRepeater/useRelativeTranslation 0
+#If set to 0, the transformation is set as is
+/gate/holes/genericRepeater/setPlacementsFilename Rank19_v2_ch.placements
+#placement -> 위치 database?
+
+
+
+
+
+
+
+#detector
+#신틸레이터 선언
+/gate/scanner/daughters/name detector
+
+/gate/scanner/daughters/insert box
+
+/gate/detector/geometry/setXLength 20 mm
+
+/gate/detector/geometry/setYLength 20 mm
+
+/gate/detector/geometry/setZLength 7 mm 
+
+/gate/detector/placement/setTranslation 0. 0. 31.5 mm 
+
+/gate/detector/setMaterial GAGG
+
+/gate/detector/vis/setColor white
+
+/gate/detector/vis/forceWireframe
+
+# tan(22.5) * 5000(Collimator to Source Distance) * 2 / 23 = 180.0928~ => 180
+
+
+
+
+
+
+
+#SYSTEM
+
+/gate/systems/scanner/level1/attach collimator
+
+/gate/systems/scanner/level2/attach detector
+
+/gate/detector/attachCrystalSD
+#검출기 능력 부여
+
+
+
+
+
+
+#PHYSICS
+
+/gate/physics/addProcess PhotoElectric gamma
+
+/gate/physics/processes/PhotoElectric/setModel StandardModel
+
+/gate/physics/addProcess Compton gamma
+ 
+/gate/physics/processes/Compton/setModel PenelopeModel
+
+/gate/physics/addProcess RayleighScattering gamma
+
+/gate/physics/processes/RayleighScattering/setModel PenelopeModel
+
+/gate/physics/addProcess ElectronIonisation e-
+
+/gate/physics/processes/ElectronIonisation/setModel StandardModel e-
+
+/gate/physics/addProcess Bremsstrahlung e-
+
+/gate/physics/processes/Bremsstrahlung/setModel StandardModel e-
+
+#/gate/physics/addProcess eMultipleScattering e-
+
+
+/gate/physics/processList Enabled
+
+
+/gate/physics/processList Initialized
+
+
+
+
+
+
+#DIGITIZER
+
+/gate/digitizer/Singles/insert adder
+
+/gate/digitizer/Singles/insert thresholder
+
+/gate/digitizer/Singles/thresholder/setThreshold 596. keV
+
+/gate/digitizer/Singles/insert upholder
+
+/gate/digitizer/Singles/upholder/setUphold 728. keV
+#범위내 에너지 광자만 채택
+
+
+
+
+#INITIALIZE
+
+/gate/run/initialize
+# 설정
+
+
+# Activity(Origin) 5920000000
+# 
+
+
+
+
+
+
+
+
+#SOURCE3
+
+# 소스지정
+
+/gate/source/addSource Gamma2
+
+/gate/source/Gamma2/setActivity 0.00000000001 Ci 
+#0.016
+#0.02
+
+/gate/source/Gamma2/gps/type Point
+
+/gate/source/Gamma2/gps/particle gamma
+
+/gate/source/Gamma2/gps/energytype Mono
+
+/gate/source/Gamma2/gps/monoenergy 662 keV   
+#Co-57
+
+/gate/source/Gamma2/gps/centre 0. 0. 1000. mm
+
+/gate/source/Gamma2/gps/angtype iso
+#angular degree
+/gate/source/Gamma2/gps/mintheta 150. deg 
+#80
+
+/gate/source/Gamma2/gps/maxtheta 180. deg 
+#100
+
+/gate/source/Gamma2/gps/minphi 0. deg
+
+/gate/source/Gamma2/gps/maxphi 360. deg
+
+/gate/source/Gamma2/dump 1
+
+
+
+
+
+
+
+# O U T P U T
+
+
+
+/gate/output/root/enable
+/gate/output/root/setFileName ./testdata/realprac
+
+/gate/output/ascii/setOutFileSinglesFlag 1
+
+/gate/output/ascii/setSingleMask 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+# 0 0 1 0 0 0 0 0 1 1 1 0 0 0 0 0 0 0
+# 광전효과에 대한 컬럼만 받겠다는 의미??
+
+
+#/gate/output/allowNoOutput
+
+
+
+
+
+
+
+
+# R A N D O M 
+
+/gate/random/setEngineName JamesRandom
+
+/gate/random/setEngineSeed auto
+
+/gate/random/verbose 0
+
+
+
+
+
+
+
+# V E R B O S I T Y
+
+/control/verbose 0
+
+/run/verbose 0
+
+/event/verbose 0
+
+/tracking/verbose 0
+
+ 
+# A P P L I C A T I O N
+
+/gate/application/setTimeSlice 1 s
+#timeslice 1초
+/gate/application/setTimeStart 0 s
+
+/gate/application/setTimeStop 3 s
+#현실시간 3초: Ci에 대한 붕괴개수 고려해서 설정해야함.
+/gate/application/startDAQ
+
+

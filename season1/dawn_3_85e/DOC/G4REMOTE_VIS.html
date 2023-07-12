@@ -1,0 +1,34 @@
+<PRE>
+<< Using DAWN for remote Geant4 visualization >>
+
+DAWN is available for Geant4 visualization.
+Normally, use the DAWNFILE driver, which establishes 
+Geant4-DAWN connection via intermediate files.
+
+For "remote" visualization, i.e., in order to visuzlize 
+Geant4 simulation with a DAWN process running in a different host, 
+use the DAWN-network driver as follows.
+
+   ---------- DAWN host -------
+   Invoke DAWN  with -G option  connection by GEANT4.
+
+       % dawn -G 
+
+   or, equivalently,  
+
+       % dawninetd
+
+  It makes DAWN invoked with network mode, and make DAWN 
+  wait for connection request from GEANT4.
+
+  ---------- GEANT4 host -------
+  (1) Set the environmental variable  "G4DAWN_HOST_NAME", 
+      in which you give hostname where dawn is running 
+      with -G option (see above).  For example, 
+
+      % setenv  G4DAWN_HOST_NAME  i1dec2.fuis.fukui-u.ac.jp 
+
+  (2) Invoke GEANT4 and perform visualization with the 
+      DAWN-Network driver.
+	
+</PRE>

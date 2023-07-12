@@ -1,0 +1,360 @@
+###################
+# Makefile for NT #
+###################
+
+#### Directory of DAWN executable (DO NOT EDIT this setting)
+INSTALL_DIR="C:\Program Files\DAWN"
+
+### MSDOS COMMANDS
+COPYCOM=copy
+#COPYCOM=cp
+RMCOM=del
+#RMCOM=rm -f
+
+### COMPILER NAME and OPTIONS
+CC       =cl     
+OPTIMIZE =
+WARNING  = 
+INCLUDE_DIR  = 
+
+### Executalble files 
+EXEC	       = dawn
+
+### Object files
+OBJ	= main_selector1.obj main_selector2.obj main.obj parameter.obj \
+          command1.obj command2.obj command3.obj command4.obj command_tk.obj command_ps.obj command_ps2.obj \
+          vector.obj perspective.obj tool2d.obj tool3d.obj toolio.obj toolstring.obj \
+          hid1.obj hid2.obj hidA.obj hidB.obj hidC.obj shading.obj object1.obj object2.obj object3.obj \
+          filereader.obj filereader2.obj filereader3.obj filereader_old.obj \
+          postscript.obj postscript2.obj linesegment.obj hidline.obj \
+	  FRCommandAnalyzer.obj \
+          FRArray.obj \
+	  FRBrepGenerator.obj  FRBrepGenerator2.obj FRObjectGenerator.obj FRTrigonometric.obj \
+          FRPolylineForBrep.obj FRBoxForBrep.obj FRTrdForBrep.obj FRTrapForBrep.obj FRParallelepipedForBrep.obj \
+          FRTubeSegForBrep.obj FRConeSegForBrep.obj FRSphereForBrep.obj FRSphereSegForBrep.obj \
+          FRPolygonForBrep.obj FRPolyconeForBrep.obj \
+          FRTorusForBrep.obj \
+          FRMark.obj \
+          polyhedron.obj
+
+### Link
+$(EXEC):	dev_control.h $(OBJ) DAWN_GUI.exe
+		$(CC)  $(WARNING) $(OPTIMIZE) -Fe$(EXEC)  $(OBJ) 
+
+### GUI menu
+DAWN_GUI.exe:DAWN_GUI.cpp
+	$(CC)  $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) DAWN_GUI.cpp
+
+### Compilation
+main.obj:	main.cpp main_selector.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) main.cpp
+
+main_selector1.obj: main_selector1.cpp main_selector.h 
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) main_selector1.cpp
+
+main_selector2.obj: main_selector2.cpp main_selector.h FRServer.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) main_selector2.cpp
+
+main_selector3.obj: main_selector3.cpp main_selector.h FRServer.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) main_selector3.cpp
+
+parameter.obj:	parameter.cpp parameter.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) parameter.cpp
+
+command1.obj:	command1.cpp command.h version.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) command1.cpp	
+
+command2.obj:	command2.cpp command.h 
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) command2.cpp	
+
+command3.obj:	command3.cpp command.h 
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) command3.cpp	
+
+command4.obj:	command4.cpp command.h command4c.icc
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) command4.cpp	
+
+command_tk.obj:	command_tk.cpp command.h 
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) command_tk.cpp	
+
+command_ps.obj:	command_ps.cpp command.h 
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) command_ps.cpp	
+
+command_ps2.obj:	command_ps2.cpp command.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) command_ps2.cpp	
+
+vector.obj:	vector.cpp vector.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) vector.cpp
+
+perspective.obj:	perspective.cpp perspective.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) perspective.cpp
+
+tool2d.obj:	tool2d.cpp tool2d.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) tool2d.cpp
+
+tool3d.obj:	tool3d.cpp tool3d.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) tool3d.cpp
+
+toolio.obj:	toolio.cpp toolio.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) toolio.cpp
+
+toolstring.obj:	toolstring.cpp toolstring.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) toolstring.cpp
+
+hid1.obj:	hid1.cpp hid.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) hid1.cpp
+
+hid2.obj:	hid2.cpp hid.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) hid2.cpp
+
+hidA.obj:	hidA.cpp hid.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) hidA.cpp
+
+hidB.obj:	hidB.cpp hid.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) hidB.cpp
+
+hidC.obj:	hidC.cpp hid.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) hidC.cpp
+
+shading.obj:	shading.cpp shading.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) shading.cpp
+
+object1.obj:	object1.cpp object.h 
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) object1.cpp
+
+object2.obj:	object2.cpp object.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) object2.cpp
+
+object3.obj:	object3.cpp object.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) object3.cpp
+
+postscript.obj:	postscript.cpp postscript.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) postscript.cpp
+
+postscript2.obj:	postscript2.cpp postscript.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) postscript2.cpp
+
+filereader.obj:	filereader.cpp filereader.h object.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) filereader.cpp
+
+filereader2.obj:	filereader2.cpp filereader.h object.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) filereader2.cpp
+
+filereader3.obj:	filereader3.cpp filereader.h object.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) filereader3.cpp
+
+filereader_old.obj:	filereader_old.cpp filereader.h object.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) filereader_old.cpp
+
+linesegment.obj:	linesegment.cpp linesegment.h perspective.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) linesegment.cpp
+
+hidline.obj:	hidline.cpp hidline.h hid.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) hidline.cpp
+
+FRArray.obj: FRArray.cpp FRArray.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRArray.cpp
+
+FRCommandAnalyzer.obj:	FRCommandAnalyzer.cpp FRCommandAnalyzer.h  FRCommandList.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRCommandAnalyzer.cpp	
+
+FRBrepGenerator.obj: FRBrepGenerator.cpp FRBrepGenerator.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRBrepGenerator.cpp
+
+FRBrepGenerator2.obj: FRBrepGenerator2.cpp FRBrepGenerator.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRBrepGenerator2.cpp
+
+FRObjectGenerator.obj: FRObjectGenerator.cpp FRObjectGenerator.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRObjectGenerator.cpp
+
+FRTrigonometric.obj: FRTrigonometric.cpp FRTrigonometric.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRTrigonometric.cpp
+
+FRPolylineForBrep.obj: FRPolylineForBrep.cpp FRPolylineForBrep.h FRPolyline.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRPolylineForBrep.cpp
+
+FRBoxForBrep.obj: FRBoxForBrep.cpp FRBoxForBrep.h FRBox.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRBoxForBrep.cpp
+
+FRTrdForBrep.obj: FRTrdForBrep.cpp FRTrdForBrep.h FRTrd.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRTrdForBrep.cpp
+
+FRTrapForBrep.obj: FRTrapForBrep.cpp FRTrapForBrep.h FRTrap.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRTrapForBrep.cpp
+
+FRParallelepipedForBrep.obj: FRParallelepipedForBrep.cpp FRParallelepipedForBrep.h FRParallelepiped.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRParallelepipedForBrep.cpp
+
+FRTubeSegForBrep.obj: FRTubeSegForBrep.cpp FRTubeSegForBrep.h FRTubeSeg.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRTubeSegForBrep.cpp
+
+
+FRConeSegForBrep.obj: FRConeSegForBrep.cpp FRConeSegForBrep.h FRConeSeg.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRConeSegForBrep.cpp
+
+FRSphereForBrep.obj: FRSphereForBrep.cpp FRSphereForBrep.h FRSphere.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRSphereForBrep.cpp
+
+FRSphereSegForBrep.obj: FRSphereSegForBrep.cpp FRSphereSegForBrep.h FRSphereSeg.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRSphereSegForBrep.cpp
+
+FRPolygonForBrep.obj: FRPolygonForBrep.cpp FRPolygonForBrep.h FRPolygon.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRPolygonForBrep.cpp
+
+FRPolyconeForBrep.obj: FRPolyconeForBrep.cpp FRPolyconeForBrep.h FRPolycone.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRPolyconeForBrep.cpp
+
+FRTorusForBrep.obj: FRTorusForBrep.cpp FRTorusForBrep.h FRTorus.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRTorusForBrep.cpp
+
+FRMark.obj: FRMark.cpp FRMark.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) FRMark.cpp
+
+polyhedron.obj: polyhedron.cpp polyhedron.h
+	$(CC) -c $(WARNING) $(OPTIMIZE) $(INCLUDE_DIR) polyhedron.cpp
+
+##### create source files with extension ".cpp"
+.SUFFIXES: .cc .cpp
+.cc.cpp:	
+	$(COPYCOM) $< $@
+
+FRArray.cpp:FRArray.cc
+
+FRBoxForBrep.cpp:FRBoxForBrep.cc
+
+FRBrepGenerator.cpp:FRBrepGenerator.cc
+
+FRBrepGenerator2.cpp:FRBrepGenerator2.cc
+
+FRClientServer.cpp:FRClientServer.cc
+
+FRCommandAnalyzer.cpp:FRCommandAnalyzer.cc
+
+FRConeSegForBrep.cpp:FRConeSegForBrep.cc
+
+FRMark.cpp:FRMark.cc
+
+FRObjectGenerator.cpp:FRObjectGenerator.cc
+
+FROpenGL.cpp:FROpenGL.cc
+
+FRParallelepipedForBrep.cpp:FRParallelepipedForBrep.cc
+
+FRPolyconeForBrep.cpp:FRPolyconeForBrep.cc
+
+FRPolygonForBrep.cpp:FRPolygonForBrep.cc
+
+FRPolylineForBrep.cpp:FRPolylineForBrep.cc
+
+FRSphereForBrep.cpp:FRSphereForBrep.cc
+
+FRSphereSegForBrep.cpp:FRSphereSegForBrep.cc
+
+FRTorusForBrep.cpp:FRTorusForBrep.cc
+
+FRTrapForBrep.cpp:FRTrapForBrep.cc
+
+FRTrdForBrep.cpp:FRTrdForBrep.cc
+
+FRTrigonometric.cpp:FRTrigonometric.cc
+
+FRTubeSegForBrep.cpp:FRTubeSegForBrep.cc
+
+command1.cpp:command1.cc
+
+command2.cpp:command2.cc
+
+command3.cpp:command3.cc
+
+command4.cpp:command4.cc
+
+command_gl.cpp:command_gl.cc
+
+command_ps.cpp:command_ps.cc
+
+command_ps2.cpp:command_ps2.cc
+
+command_tk.cpp:command_tk.cc
+
+command_x.cpp:command_x.cc
+
+filereader.cpp:filereader.cc
+
+filereader2.cpp:filereader2.cc
+
+filereader3.cpp:filereader3.cc
+
+filereader_old.cpp:filereader_old.cc
+
+hid1.cpp:hid1.cc
+
+hid2.cpp:hid2.cc
+
+hidA.cpp:hidA.cc
+
+hidB.cpp:hidB.cc
+
+hidC.cpp:hidC.cc
+
+hidline.cpp:hidline.cc
+
+linesegment.cpp:linesegment.cc
+
+main.cpp:main.cc
+
+main_selector1.cpp:main_selector1.cc
+
+main_selector2.cpp:main_selector2.cc
+
+main_selector3.cpp:main_selector3.cc
+
+object1.cpp:object1.cc
+
+object2.cpp:object2.cc
+
+object3.cpp:object3.cc
+
+parameter.cpp:parameter.cc
+
+perspective.cpp:perspective.cc
+
+polyhedron.cpp:polyhedron.cc
+
+postscript.cpp:postscript.cc
+
+postscript2.cpp:postscript2.cc
+
+ps2x.cpp:ps2x.cc
+
+shading.cpp:shading.cc
+
+tool2d.cpp:tool2d.cc
+
+tool3d.cpp:tool3d.cc
+
+toolio.cpp:toolio.cc
+
+toolstring.cpp:toolstring.cc
+
+vector.cpp:vector.cc
+
+x_window.cpp:x_window.cc
+
+DAWN_GUI.cpp:DAWN_GUI.cc
+
+##### cleaning
+
+execlean:
+	$(RMCOM) *.exe
+
+cppclean:
+	$(RMCOM) *.cpp
+
+clean:
+	$(RMCOM) *.exe
+	$(RMCOM) *.obj
+	$(RMCOM) *.cpp
+
+### install 
+install:
+	dawninst $(INSTALL_DIR)
+ 

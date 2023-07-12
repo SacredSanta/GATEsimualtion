@@ -1,0 +1,105 @@
+##G4.PRIM-FORMAT-2.4
+
+##### List of primitives 1 #####
+/BoundingBox -1.0  -1.0 -5.0   8.0  4.0  6.0
+!SetCamera
+!OpenDevice 
+!BeginModeling
+
+# Box
+/Origin   0.0  0.0  0.0 
+/ColorRGB 1.0  0.0  0.0 
+/Box 0.5  2.0  4.5 
+
+# Column
+/Origin   4.0  0.0  0.0 
+/ColorRGB 0.0  1.0  0.0 
+/Ndiv 50
+/Column 1.5  2.0 
+
+# Trd
+/Origin   0.0  0.0  0.0 
+/ColorRGB 0.0  1.0  1.0 
+/Origin   7.0  0.0  0.0 
+/Trd      1 0.5 1 0.5 4 
+
+# Cone segment
+/Origin   1.0  5.0  0.0 
+/ColorRGB 0.0  1.0  1.0 
+/Cons     1 1.5  0.5 1.0 2.0  1.5 4.5
+
+# Tube segment
+/Origin   7.0  7.0  0.0 
+/ColorRGB 0.0  1.0  1.0 
+/Tubs     1 1.5 2.0 1.5 4.5
+
+# Sphere
+/Ndiv 25
+/Origin   4.0  4.0  0.0 
+/ColorRGB 0.0  1.0  1.0 
+/Sphere   1.5
+
+# Polyline
+/Origin   0.0  0.0  0.0 
+/ColorRGB 0.0  0.0  1.0 
+/Polyline 
+/PLVertex 0.0 0.0 0.0  
+/PLVertex 10.0 0.0 0.0  
+/PLVertex 10.0 10.0 0.0  
+/PLVertex 0.0 10.0 0.0  
+/PLVertex 0.0 0.0 0.0  
+/EndPolyline 
+
+# Mark (square)
+/ColorRGB       1 0  0
+/MarkSquare2D   0 0  0  0.1
+/MarkText2D     0  0  0  0.5 0.25 -0.125 Origin
+
+/MarkSquare2D   1 1  1  0.1
+/MarkText2D     1 1  1  0.5  0.25 -0.125 (1 1 1)
+
+/MarkSquare2D   2 2  2  0.1
+/MarkText2D     2 2  2  0.5  0.25 -0.125 (2 2 2)
+
+/MarkSquare2D   3 3  3  0.1
+/MarkText2D     3 3  3  0.5  0.25 -0.125 (3 3 3)  
+
+/MarkSquare2D   4 4  4  0.1
+/MarkText2D     4 4  4  0.5  0.25 -0.125 (4 4 4)
+
+/MarkSquare2D   5 5  5  0.1
+/MarkText2D     5 5  5  0.5  0.25 -0.125 (5 5 5) 
+
+/MarkSquare2D   6 6  6  0.1
+/MarkText2D     6 6  6  0.5  0.25 -0.125 (6 6 6)
+
+/MarkSquare2D   7 7  7  0.1
+/MarkText2D     7 7  7  0.5  0.25 -0.125 (7 7 7) 
+
+/MarkSquare2D   8 8  8  0.1
+/MarkText2D     8 8  8  0.5  0.25 -0.125 (8 8 8)
+
+/MarkSquare2D   9 9  9  0.1
+/MarkText2D     9 9  9  0.5  0.25 -0.125 (9 9 9)
+
+# Mark (circle)
+/ColorRGB       0 1  0
+/MarkCircle2DS   0  0  0  5
+/MarkCircle2DS   2  1  1  5
+/MarkCircle2DS   4  2  2  5
+/MarkCircle2DS   6  3  3  5
+/MarkCircle2DS   8  4  4  5
+/MarkCircle2DS  10  5  5  5
+/MarkCircle2DS  12  6  6  5
+/MarkCircle2DS  14  7  7  5
+/MarkCircle2DS  16  8  8  5
+/MarkCircle2DS  18  9  9  5
+
+# Text
+/ColorRGB  0 0 0 
+/Text2DS   30 40 40 Supported Primitives 1
+
+!EndModeling
+!DrawAll 
+!CloseDevice 
+

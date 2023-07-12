@@ -1,0 +1,5 @@
+/vis/open OGLSX
+/vis/scene/create "scene1"
+/vis/scene/add/extent -300 300 -300 300 -300 300 cm
+/vis/scene/add/axes
+/vis/viewer/set/viewpointThetaPhi 60 60

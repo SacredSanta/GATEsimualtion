@@ -1,0 +1,28 @@
+##G4.PRIM-FORMAT-2.4
+
+####################################################
+##  Symmetric trapezoid
+##
+##  /Trd  dx1 dx2 dy1 dy2 dz    ; 
+##
+##	dx1: half length x edge at bottom
+##	dx2: half length x edge at top
+##	dy1: half length y edge at bottom
+##	dy2: half length y edge at top 	
+##	dz : half height
+##
+###################################################
+
+/BoundingBox -3.0  -3.0 -3.0  3.0  3.0 3.0
+!SetCamera
+!OpenDevice 
+!BeginModeling
+
+/ColorRGB  0 1 1
+
+/Trd  2.5  2.0 1.0 0.5 2.5 
+
+!EndModeling
+!DrawAll 
+!CloseDevice 
+
